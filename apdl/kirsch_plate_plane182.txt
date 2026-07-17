@@ -1,0 +1,73 @@
+/clear
+/filname,plate_with_hole
+/prep7
+
+! Parameters
+a  = 15
+b  = 25
+lx = 120
+ly = 120
+p  = 100
+E  = 2.1e5
+nu = 0.3
+
+! Element type and material
+et,1,plane182
+mp,ex,1,E
+mp,nuxy,1,nu
+
+! Geometry: quarter of plate with quarter of elliptical hole
+k,1,0,0
+k,2,0,a
+k,3,a,0
+k,4,lx,0
+k,5,0,ly
+k,6,lx,ly
+
+larc,3,2,1,a
+lsscale,all,,,,b/a,,,,1
+
+l,3,4
+l,4,6
+l,6,5
+l,5,2
+
+al,all
+
+! Mesh
+lesize,all,min(lx,ly)/100
+asel,all
+mshkey,0
+amesh,all
+
+! Boundary conditions and load
+lsel,s,loc,y,ly
+sfl,all,pres,p
+
+lsel,s,loc,y,0
+dl,all,,uy
+
+lsel,s,loc,x,0
+dl,all,,ux
+
+allsel,all
+
+/solu
+antype,static
+solve
+finish
+
+/post1
+set,last
+
+nsort,s,eqv
+*get,seqvmax,sort,0,max
+
+*get,area,area,1,area
+
+*cfopen,kirsch_dataset,csv,,append
+*vwrite,a,b,lx,ly,seqvmax,area
+(F12.4,',',F12.4,',',F12.4,',',F12.4,',',E16.8,',',E16.8)
+*cfclose
+
+finish

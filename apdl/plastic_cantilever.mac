@@ -1,0 +1,87 @@
+! plastic_cantilever.mac
+! Упругопластическая консоль (плоское напряжённое состояние, PLANE182).
+! Параметрический макрос для DOE: задать len, height, thk, force, sy, Et до вызова.
+! Выход: max эквивалентная пластическая деформация (порог текучести!), прогиб торца,
+!        max напряжение по Мизесу, площадь. Пишется в plastic_result.txt.
+!
+! Ключевая идея для ML-проекта: epl_max = 0 в упругом режиме и резко растёт после
+! текучести -> пороговый (негладкий) отклик, на котором GPR проигрывает деревьям.
+
+FINISH
+/CLEAR,NOSTART
+/PREP7
+
+! ----- параметры по умолчанию (если не заданы извне) -----
+len   = 10.0          ! длина, м
+height= 1.0           ! высота сечения, м
+thk   = 0.1           ! толщина (из плоскости), м
+force = 2.0e6         ! суммарная поперечная сила на торце, Н
+EE    = 2.1e11        ! модуль Юнга, Па
+nu    = 0.3
+sy    = 2.5e8         ! предел текучести, Па
+Et    = 1.05e10       ! касательный модуль (BISO), ~E/20 (5% упрочнения, лучше сходимость)
+
+! ----- элемент и материал -----
+ET,1,PLANE182
+KEYOPT,1,3,3          ! плоское напряжённое состояние с толщиной
+R,1,thk
+MP,EX,1,EE
+MP,PRXY,1,nu
+TB,BISO,1            ! билинейное изотропное упрочнение
+TBDATA,1,sy,Et
+
+! ----- геометрия и сетка -----
+RECTNG,0,len,0,height
+esz = height/12
+ESIZE,esz
+MSHKEY,0
+AMESH,ALL
+
+! ----- закрепление: левая грань защемлена -----
+NSEL,S,LOC,X,0
+D,ALL,UX,0
+D,ALL,UY,0
+NSEL,ALL
+
+! ----- нагрузка: сила распределена по узлам правого торца (вниз) -----
+NSEL,S,LOC,X,len
+*GET,nr,NODE,0,COUNT
+fn = -force/nr
+F,ALL,FY,fn
+NSEL,ALL
+
+! ----- нелинейный статический расчёт -----
+/SOLU
+ANTYPE,STATIC
+NLGEOM,OFF           ! малые деформации, материальная нелинейность
+NSUBST,20,200,5
+OUTRES,ALL,ALL
+CNVTOL,F, ,1.0e-3
+SOLVE
+FINISH
+
+! ----- постпроцессинг -----
+/POST1
+SET,LAST
+! максимальная эквивалентная пластическая деформация (пороговый отклик)
+ETABLE,epl,EPPL,EQV
+ESORT,ETAB,epl,,1
+*GET,epl_max,SORT,,MAX
+! максимальное напряжение по Мизесу
+ETABLE,seq,S,EQV
+ESORT,ETAB,seq,,1
+*GET,sig_max,SORT,,MAX
+! прогиб контрольной точки (узел правого торца у середины высоты)
+NSEL,S,LOC,X,len
+NSEL,R,LOC,Y,height/2
+*GET,ntip,NODE,0,NUM,MIN
+*GET,uy_tip,NODE,ntip,U,Y
+NSEL,ALL
+area = len*height
+
+! ----- запись результата -----
+*CFOPEN,plastic_result,txt
+*VWRITE,len,height,thk,force,sy,epl_max,uy_tip,sig_max,area
+(9E20.10)
+*CFCLOS
+FINISH
