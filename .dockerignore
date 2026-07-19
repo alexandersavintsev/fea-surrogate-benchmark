@@ -1,0 +1,29 @@
+# git и служебное
+.git/
+.github/
+.gitignore
+
+# python-кэш и окружения
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# тяжёлый ANSYS-скретч и артефакты расчётов (нет в образе)
+runs/
+runs_*/
+solver/
+catboost_info/
+mlruns/
+results/
+*.h5
+*.exe
+
+# офисные документы и сборки отчётов
+*.docx
+*.pptx
+*.pdf
+
+# прочее
+.DS_Store
