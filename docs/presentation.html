@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Суррогаты для МКЭ - Савинцев Александр - JMLC 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+  :root{ --bg:#f6f9fc; --text:#16233a; --muted:#5b7a9e; }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ background:#f6f9fc; margin:0; }
+  body{ font-family:'Inter',sans-serif; color:#16233a; overflow:hidden; height:100vh; width:100vw; }
+  .deck{ width:100vw; height:100vh; position:relative; }
+  .slide{ position:absolute; inset:0; background:linear-gradient(180deg,#f9fbfe 0%,#eef3f9 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transform:scale(.96); transition:opacity .55s ease, transform .55s ease; pointer-events:none; overflow:hidden; }
+  .slide.active{ opacity:1; transform:scale(1); pointer-events:all; }
+  .slide > .content{ position:relative; z-index:2; width:100%; max-width:1200px; padding:clamp(1rem,2.6vw,2.6rem); }
+  .gradient-mesh{ position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(80px); animation:float 18s ease-in-out infinite; }
+  .blob:nth-child(2){ animation-duration:21s; animation-direction:reverse; }
+  .blob:nth-child(3){ animation-duration:24s; }
+  @keyframes float{ 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(28px,-24px) scale(1.07);} }
+  .slide::after{ content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse at center, transparent 50%, rgba(22,35,58,.05) 100%); }
+  .glass{ background:rgba(255,255,255,.92); border:1px solid rgba(22,35,58,.08); border-radius:20px; box-shadow:0 10px 28px rgba(37,66,109,.10); }
+  .grid2{ display:grid; grid-template-columns:1.05fr .95fr; gap:1.2rem; align-items:stretch; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:.8rem; }
+  .metric{ font-size:clamp(1.8rem,3.4vw,3rem); font-weight:900; line-height:.95; letter-spacing:-.04em; color:#16233a; }
+  .kicker{ text-transform:uppercase; letter-spacing:.2em; font-size:.72rem; color:#8497b4; font-weight:600; }
+  .big-title{ font-family:'Space Grotesk',sans-serif; font-size:clamp(2.4rem,5.4vw,4.8rem); line-height:.95; letter-spacing:-.045em; }
+  .section-title{ font-family:'Space Grotesk',sans-serif; font-size:clamp(1.6rem,2.8vw,2.5rem); line-height:1; letter-spacing:-.03em; }
+  .pill{ display:inline-flex; align-items:center; gap:.4rem; padding:.36rem .75rem; border-radius:999px; background:rgba(37,99,235,.08); color:#22304a; font-size:.84rem; border:1px solid rgba(37,99,235,.12); }
+  table.t{ width:100%; border-collapse:collapse; font-size:.88rem; }
+  table.t th, table.t td{ padding:.5rem .6rem; border-bottom:1px solid rgba(22,35,58,.08); vertical-align:top; text-align:left; }
+  table.t th{ color:#2563eb; font-weight:700; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; }
+  table.t td{ color:#33486a; }
+  table.t.compact th, table.t.compact td{ padding:.32rem .55rem; font-size:.8rem; }
+  .win-gpr{ color:#2563eb; font-weight:800; }
+  .win-boost{ color:#f97316; font-weight:800; }
+  .roadline{ height:5px; border-radius:999px; background:linear-gradient(90deg,#2563eb 0%,#0d9488 55%,#f97316 100%); }
+  .reveal{ opacity:0; transform:translateY(16px); }
+  .nav{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:12px; z-index:100; background:rgba(255,255,255,.9); backdrop-filter:blur(10px); padding:8px 16px; border-radius:999px; border:1px solid rgba(22,35,58,.08); box-shadow:0 8px 20px rgba(37,66,109,.12); }
+  .nav-btn{ width:36px; height:36px; border:none; background:rgba(22,35,58,.05); color:#16233a; border-radius:50%; font-size:1.1rem; cursor:pointer; }
+  .dots{ display:flex; gap:7px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:rgba(22,35,58,.16); cursor:pointer; transition:.25s; }
+  .dot.active{ background:#2563eb; transform:scale(1.3); }
+  .counter{ font-size:.8rem; color:#6b7f9e; min-width:42px; text-align:center; }
+  .timer{ display:flex; align-items:center; gap:.5rem; padding:.35rem .7rem; border-radius:999px; background:#fff; border:1px solid rgba(22,35,58,.1); font-weight:700; font-size:.85rem; }
+  .tdot{ width:9px; height:9px; border-radius:50%; background:#0d9488; box-shadow:0 0 0 5px rgba(13,148,136,.14); }
+  .timer.warn .tdot{ background:#f59e0b; box-shadow:0 0 0 5px rgba(245,158,11,.16); }
+  .timer.danger .tdot{ background:#ef4444; box-shadow:0 0 0 5px rgba(239,68,68,.16); }
+  .qr img{ width:190px; height:190px; background:#fff; padding:.5rem; border-radius:14px; border:1px solid rgba(22,35,58,.08); }
+  .note{ font-size:.78rem; color:#7a8ba6; line-height:1.45; }
+  .src{ font-size:.72rem; color:#8497b4; }
+  .src a{ color:#2563eb; text-decoration:none; }
+  ul.tight{ margin:.5rem 0 0; padding-left:1.05rem; color:#33486a; line-height:1.5; font-size:.88rem; }
+  ul.tight li{ margin-bottom:.45rem; }
+  @media (max-width:920px){ .grid2,.grid3,.grid4{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 ТИТУЛ -->
+<div class="slide active" data-slide="1">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:460px;height:460px;top:-120px;right:-100px;background:#2563eb;opacity:.13"></div>
+    <div class="blob" style="width:340px;height:340px;bottom:-100px;left:-70px;background:#0d9488;opacity:.13"></div>
+    <div class="blob" style="width:220px;height:220px;top:38%;left:14%;background:#f97316;opacity:.10"></div>
+  </div>
+  <div class="content">
+    <div class="grid2">
+      <div>
+        <div class="pill reveal">Инженерные расчёты · Суррогатное ML-моделирование</div>
+        <h1 class="big-title reveal" style="margin:.8rem 0 .8rem; background:linear-gradient(135deg,#16233a 0%,#2563eb 50%,#0d9488 100%); -webkit-background-clip:text; background-clip:text; color:transparent;">Суррогаты<br>для МКЭ</h1>
+        <p class="reveal" style="max-width:56ch; font-size:1.08rem; color:#33486a; line-height:1.55;">Параметрический расчёт в ANSYS идёт часами. Суррогатная модель обучается один раз и отвечает за миллисекунды. Проект отвечает на главный вопрос - <b>какую модель брать</b> - и показывает, что привычное «бери градиентный бустинг» на гладких задачах ошибочно.</p>
+        <div class="reveal" style="display:flex; gap:1rem; margin-top:1.2rem; flex-wrap:wrap; color:#6b7f9e; font-size:.92rem;">
+          <span>Савинцев Александр</span><span>Junior ML Contest 2026 · Волна 3</span><span>Питчинг - 27-29 июля</span>
+        </div>
+      </div>
+      <div class="glass reveal" style="align-self:center; padding:1.4rem;">
+        <div class="kicker">В одном кадре</div>
+        <div class="grid3" style="margin-top:.9rem;">
+          <div><div class="metric">1000</div><div style="color:#6b7f9e; font-size:.88rem;">расчётов ANSYS</div></div>
+          <div><div class="metric">8</div><div style="color:#6b7f9e; font-size:.88rem;">моделей в сравнении</div></div>
+          <div><div class="metric">×1000</div><div style="color:#6b7f9e; font-size:.88rem;">ускорение отклика</div></div>
+        </div>
+        <div class="roadline" style="margin:1.1rem 0 .9rem;"></div>
+        <div style="display:grid; gap:.55rem; color:#3d5478; font-size:.94rem;">
+          <div>ANSYS APDL → латинский гиперкуб → 8 моделей → карта выбора.</div>
+          <div>Результат: где GPR, где бустинг - и цена ошибки в R².</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 ПРОБЛЕМА -->
+<div class="slide" data-slide="2">
+  <div class="gradient-mesh"><div class="blob" style="width:360px;height:360px;top:-90px;right:-60px;background:#2563eb;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-80px;left:-50px;background:#f97316;opacity:.07"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 2</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 1rem;">Проблема</h2>
+    <div class="grid2">
+      <div class="glass reveal" style="padding:1.3rem;">
+        <p style="font-size:1.04rem; line-height:1.6; color:#2f455f; margin:0;">Инженер-расчётчик подбирает геометрию и нагрузку перебором. Один расчёт в ANSYS - от секунд до минут, а параметрическое исследование или оптимизация требуют <b>сотен и тысяч</b> расчётов. Перебор растягивается на часы и сутки, вариантов проверяется меньше, чем нужно, а оптимум ищется на глаз.</p>
+        <div style="margin-top:1rem; display:grid; gap:.55rem;">
+          <div class="pill">Часы ожидания на один перебор</div>
+          <div class="pill">Проверяется мало вариантов</div>
+          <div class="pill">Оптимизация откладывается «на потом»</div>
+        </div>
+      </div>
+      <div class="glass reveal" style="padding:1.3rem;">
+        <div class="kicker">Job to be done</div>
+        <p style="margin-top:.7rem; font-size:1.02rem; line-height:1.6; color:#2f455f;">Когда мне нужно перебрать десятки вариантов геометрии и нагрузки, я хочу получать отклик <span style="color:#2563eb; font-weight:700;">за секунды</span>, чтобы найти оптимум до дедлайна и не потерять в точности.</p>
+        <div class="roadline" style="margin:1rem 0 .8rem;"></div>
+        <div style="color:#0d9488; font-weight:700; font-size:.96rem;">Суррогат закрывает вопрос скорости. Открытым остаётся вопрос - какой именно суррогат.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 АУДИТОРИЯ И РЫНОК -->
+<div class="slide" data-slide="3">
+  <div class="gradient-mesh"><div class="blob" style="width:320px;height:320px;top:-60px;left:-40px;background:#0d9488;opacity:.08"></div><div class="blob" style="width:320px;height:320px;bottom:-100px;right:-70px;background:#2563eb;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 3</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .9rem;">Аудитория и рынок</h2>
+    <div class="grid2">
+      <div class="glass reveal" style="padding:1.1rem;">
+        <table class="t">
+          <thead><tr><th>Роль</th><th>Кто</th><th>Зачем</th></tr></thead>
+          <tbody>
+            <tr><td>Пользователь</td><td>Инженер-расчётчик (CAE)</td><td>Перебрать варианты за минуты, а не за сутки</td></tr>
+            <tr><td>Заказчик</td><td>Расчётное подразделение КБ или завода</td><td>Успевать в срок, считать больше вариантов</td></tr>
+            <tr><td>Выгодоприобретатель</td><td>Конструктор, руководитель проекта</td><td>Более лёгкая и надёжная конструкция</td></tr>
+          </tbody>
+        </table>
+        <div class="roadline" style="margin:.9rem 0 .7rem;"></div>
+        <div style="color:#3d5478; font-size:.88rem; line-height:1.5;"><b>Альтернативы:</b> ANSYS optiSLang, Altair HyperStudy, Datadvance pSeven, Siemens HEEDS, Dassault Isight - закрытые коммерческие пакеты, подбирающие метамодель автоматически «в чёрную коробку». Открытой воспроизводимой карты выбора на реальных МКЭ-данных они не публикуют, а в России доступ к ним ограничен.</div>
+      </div>
+      <div class="glass reveal" style="padding:1.1rem; display:grid; gap:.5rem; align-content:start;">
+        <div style="display:flex; justify-content:space-between; gap:1rem; align-items:baseline;">
+          <span style="padding:.15rem .5rem; border-radius:6px; background:rgba(37,99,235,.1); color:#2563eb; font-weight:700; font-size:.78rem;">TAM</span>
+          <span style="text-align:right; font-weight:700; color:#16233a;">$20,5 млрд (2026) → $41 млрд (2035)</span>
+        </div>
+        <div class="src" style="padding-bottom:.5rem; border-bottom:1px solid rgba(22,35,58,.07);">Мировой рынок CAE-ПО, CAGR 8%. Самый быстрый сегмент - ИИ в симуляциях: +$40,7 млрд за 2026-2030, CAGR 21,9%.</div>
+        <div style="display:flex; justify-content:space-between; gap:1rem; align-items:baseline;">
+          <span style="padding:.15rem .5rem; border-radius:6px; background:rgba(37,99,235,.1); color:#2563eb; font-weight:700; font-size:.78rem;">SAM</span>
+          <span style="text-align:right; font-weight:700; color:#16233a;">50 млрд ₽ (2024) → 74 млрд ₽ (2030)</span>
+        </div>
+        <div class="src" style="padding-bottom:.5rem; border-bottom:1px solid rgba(22,35,58,.07);">Российский рынок инженерного ПО, рост 16% в год. Импортозамещение CAD/CAM/CAE - всего 15-20%, 61% предприятий радиоэлектроники до сих пор на иностранных CAE.</div>
+        <div style="display:flex; justify-content:space-between; gap:1rem; align-items:baseline;">
+          <span style="padding:.15rem .5rem; border-radius:6px; background:rgba(13,148,136,.12); color:#0d9488; font-weight:700; font-size:.78rem;">SOM</span>
+          <span style="text-align:right; font-weight:700; color:#16233a;">1,6-3,2 млрд ₽ <span style="font-weight:500; color:#7a8ba6; font-size:.8rem;">(оценка)</span></span>
+        </div>
+        <div class="src">Допущение: CAE занимает 5-10% инженерного ПО без PLM (32 млрд ₽, 2024). Точка входа - открытая платформа «Логос» (Росатом), которая принимает сторонние расчётные модули.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 ПРОДУКТ -->
+<div class="slide" data-slide="4">
+  <div class="gradient-mesh"><div class="blob" style="width:320px;height:320px;top:8%;right:-60px;background:#2563eb;opacity:.08"></div><div class="blob" style="width:220px;height:220px;bottom:-40px;left:10%;background:#0d9488;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 4</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .9rem;">Продукт и решение</h2>
+    <div class="glass reveal" style="padding:1rem 1.2rem; margin-bottom:.9rem; font-size:1.04rem; color:#2f455f;">В семи словах: <span style="color:#2563eb; font-weight:800;">воспроизводимый бенчмарк, который говорит, какой суррогат брать.</span></div>
+    <div class="grid4">
+      <div class="glass reveal" style="padding:.95rem;"><div class="kicker">1. План</div><div style="margin-top:.5rem; color:#3d5478; font-size:.9rem; line-height:1.45;">Латинский гиперкуб задаёт точки эксперимента в пространстве параметров.</div></div>
+      <div class="glass reveal" style="padding:.95rem;"><div class="kicker">2. Расчёт</div><div style="margin-top:.5rem; color:#3d5478; font-size:.9rem; line-height:1.45;">Параметрический макрос ANSYS APDL считает их пакетно, результат в CSV.</div></div>
+      <div class="glass reveal" style="padding:.95rem;"><div class="kicker">3. Сравнение</div><div style="margin-top:.5rem; color:#3d5478; font-size:.9rem; line-height:1.45;">8 моделей, k-блочная кросс-валидация, автонастройка деревьев через Optuna.</div></div>
+      <div class="glass reveal" style="padding:.95rem;"><div class="kicker">4. Применение</div><div style="margin-top:.5rem; color:#3d5478; font-size:.9rem; line-height:1.45;">Карта выбора модели и оптимизация на суррогате с проверкой полным расчётом.</div></div>
+    </div>
+    <div class="glass reveal" style="margin-top:.9rem; padding:.8rem 1rem; border-left:3px solid #0d9488; color:#3d5478; font-size:.92rem; line-height:1.5;"><b style="color:#16233a;">Решатель-агностик:</b> пайплайн принимает любой набор расчётов в CSV, поэтому не привязан к ANSYS и переносится на отечественные решатели.</div>
+  </div>
+</div>
+
+<!-- 5 ДАННЫЕ -->
+<div class="slide" data-slide="5">
+  <div class="gradient-mesh"><div class="blob" style="width:350px;height:350px;top:-90px;right:-80px;background:#0d9488;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-50px;left:-50px;background:#2563eb;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 5</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .8rem;">Данные: 1000 собственных расчётов</h2>
+    <div class="grid2">
+      <div class="glass reveal" style="padding:1rem;">
+        <table class="t compact">
+          <thead><tr><th>Задача</th><th>Точек</th><th>Режим отклика</th></tr></thead>
+          <tbody>
+            <tr><td>Кирш, пластина с отверстием</td><td>100 + 30 + 30</td><td>гладкий</td></tr>
+            <tr><td>Консоль, упругий изгиб</td><td>80 / 240</td><td>гладкий</td></tr>
+            <tr><td>Консоль, расширенный диапазон</td><td>120</td><td>жёсткий, плохо обусловленный</td></tr>
+            <tr><td>Консоль, упругопластический изгиб</td><td>200</td><td>пороговый</td></tr>
+            <tr><td>Консоль, гармонический резонанс</td><td>200</td><td>резкий</td></tr>
+            <tr><td>Синтетические функции контроля</td><td>5 × 400</td><td>от гладкой до разрывной</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid; gap:.7rem; align-content:start;">
+        <div class="glass reveal" style="padding:.9rem 1rem;">
+          <div style="font-weight:700; color:#16233a; font-size:.95rem;">Пластичность настроена специально</div>
+          <div class="note" style="margin-top:.35rem;">Диапазон нагрузки подобран так, чтобы <b>56%</b> точек перешли в пластику, а 88 из 200 остались упругими с нулевой деформацией. Так получен честный пороговый отклик.</div>
+        </div>
+        <div class="glass reveal" style="padding:.9rem 1rem;">
+          <div style="font-weight:700; color:#16233a; font-size:.95rem;">Резонанс - настоящая негладкость</div>
+          <div class="note" style="margin-top:.35rem;">Частота возбуждения 9 Гц, первая собственная частота зависит от геометрии. Разброс амплитуд по выборке достигает <b>66 раз</b> - острый пик, а не плавная поверхность.</div>
+        </div>
+        <div class="glass reveal" style="padding:.9rem 1rem;">
+          <div style="font-weight:700; color:#16233a; font-size:.95rem;">Почему так мало точек</div>
+          <div class="note" style="margin-top:.35rem;">Малые выборки - норма для МКЭ: каждая точка стоит полного расчёта. Именно этот режим и оказался решающим.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 МЕТРИКИ И НАХОДКА -->
+<div class="slide" data-slide="6">
+  <div class="gradient-mesh"><div class="blob" style="width:330px;height:330px;top:-90px;left:-40px;background:#f97316;opacity:.08"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;right:-50px;background:#2563eb;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 6</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .7rem;">Находка: лидер меняется по гладкости</h2>
+    <div class="glass reveal" style="padding:.7rem 1rem; margin-bottom:.8rem; color:#3d5478; font-size:.9rem;">R² по k-блочной кросс-валидации, 5 блоков × 3 сида. Деревья настроены Optuna, GPR самонастраивается по правдоподобию ядра - сравнение честное.</div>
+    <div class="grid2">
+      <div class="glass reveal" style="padding:1rem;">
+        <table class="t compact">
+          <thead><tr><th>Задача</th><th>GPR</th><th>Бустинг</th><th>Лидер</th></tr></thead>
+          <tbody>
+            <tr><td>Кирш, 100 точек</td><td class="win-gpr">1,00</td><td>0,98</td><td class="win-gpr">GPR</td></tr>
+            <tr><td>Кирш, 30 точек</td><td class="win-gpr">0,99</td><td>≤ 0,86</td><td class="win-gpr">GPR</td></tr>
+            <tr><td>Консоль, 80 точек</td><td class="win-gpr">0,99</td><td>0,84</td><td class="win-gpr">GPR</td></tr>
+            <tr><td>Консоль, 240 точек</td><td class="win-gpr">0,90</td><td>0,83</td><td class="win-gpr">GPR</td></tr>
+            <tr><td>Пластичность, 200</td><td class="win-gpr">0,99</td><td>0,85</td><td class="win-gpr">GPR</td></tr>
+            <tr><td>Консоль, 120 (экстрим)</td><td>0,76</td><td class="win-boost">0,88</td><td class="win-boost">бустинг</td></tr>
+            <tr><td>Резонанс, 200</td><td>0,45</td><td class="win-boost">0,61</td><td class="win-boost">CatBoost</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid; gap:.7rem; align-content:start;">
+        <img src="figs/fig_crossover.png" alt="Кроссовер GPR против градиентного бустинга" class="reveal" style="width:100%; border-radius:14px; border:1px solid rgba(22,35,58,.08); background:#fff;">
+        <div class="glass reveal" style="padding:.8rem 1rem; border-left:3px solid #f97316;">
+          <div style="font-weight:700; color:#16233a; font-size:.94rem;">Что это меняет на практике</div>
+          <div class="note" style="margin-top:.3rem;">Догма «на табличных данных бери бустинг» на гладких МКЭ-суррогатах <b>неверна</b>: на 30 точках цена ошибки - 0,99 против 0,86 по R². Но на резонансе догма срабатывает. Граница проходит по гладкости отклика.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 ДЕМО -->
+<div class="slide" data-slide="7">
+  <div class="gradient-mesh"><div class="blob" style="width:380px;height:380px;top:-110px;right:-90px;background:#2563eb;opacity:.1"></div><div class="blob" style="width:300px;height:300px;bottom:-70px;left:-50px;background:#0d9488;opacity:.08"></div></div>
+  <div class="content" style="text-align:center;">
+    <div class="kicker reveal">Слайд 7</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 1rem;">Демо</h2>
+    <div class="glass reveal" style="padding:1.8rem 1.5rem; max-width:800px; margin:0 auto;">
+      <div style="font-size:3.2rem; margin-bottom:.7rem;">⚙️</div>
+      <p style="font-size:1.08rem; color:#3d5478; max-width:56ch; margin:0 auto 1rem;">Загружаем реальный CSV расчётов ANSYS, запускаем сравнение - и лидер меняется на глазах: на задаче Кирша сверху GPR, на резонансе - CatBoost.</p>
+      <!-- ЗАМЕНИТЬ href и data= в QR на ссылку записанного видео -->
+      <div class="note">Видео-демо: 90 секунд, реальные данные, без монтажных склеек. Ссылка и QR - на последнем слайде.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 ПРЕИМУЩЕСТВА -->
+<div class="slide" data-slide="8">
+  <div class="gradient-mesh"><div class="blob" style="width:310px;height:310px;top:-60px;left:-50px;background:#0d9488;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-50px;right:-40px;background:#f97316;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 8</div>
+    <h2 class="section-title reveal" style="margin:.35rem 0 .8rem;">Технологическая новизна</h2>
+    <div class="grid3">
+      <div class="glass reveal" style="padding:.9rem 1rem;"><div class="kicker">01</div><div style="margin-top:.5rem; font-weight:700; color:#16233a;">Карта на реальных данных</div><div class="note" style="margin-top:.35rem;">Не на синтетике: 1000 собственных расчётов ANSYS в пяти постановках, от концентрации напряжений до резонанса.</div></div>
+      <div class="glass reveal" style="padding:.9rem 1rem;"><div class="kicker">02</div><div style="margin-top:.5rem; font-weight:700; color:#16233a;">Честность сравнения</div><div class="note" style="margin-top:.35rem;">Деревья настроены Optuna, GPR самонастраивается. Снято возражение «вы просто не подобрали гиперпараметры».</div></div>
+      <div class="glass reveal" style="padding:.9rem 1rem;"><div class="kicker">03</div><div style="margin-top:.5rem; font-weight:700; color:#16233a;">Контроль механизма</div><div class="note" style="margin-top:.35rem;">Пять синтетических функций с известной гладкостью подтверждают: лидер меняется именно из-за гладкости, а не из-за частностей задачи.</div></div>
+    </div>
+    <div class="glass reveal" style="margin-top:.85rem; padding:.5rem 1rem;">
+      <table class="t compact">
+        <thead><tr><th style="width:26%;">Решение</th><th style="width:37%;">Что делает</th><th>Слабое место</th></tr></thead>
+        <tbody>
+          <tr><td>ANSYS optiSLang</td><td>Автоподбор метамодели (MOP)</td><td>Закрытая логика выбора, лицензия, доступ в РФ ограничен</td></tr>
+          <tr><td>Altair HyperStudy, Siemens HEEDS, pSeven</td><td>Планирование экспериментов и оптимизация</td><td>Нет опубликованной карты «где какая модель выигрывает»</td></tr>
+          <tr><td><b style="color:#0d9488;">Наш подход</b></td><td>Открытый воспроизводимый бенчмарк + карта выбора</td><td>Пока 5 постановок, дальше - контакт и устойчивость</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 9 РИСКИ -->
+<div class="slide" data-slide="9">
+  <div class="gradient-mesh"><div class="blob" style="width:340px;height:340px;top:-80px;right:-60px;background:#f97316;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#2563eb;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 9</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .9rem;">Риски и честные ограничения</h2>
+    <div class="grid2">
+      <div class="glass reveal" style="padding:1.1rem;">
+        <div class="kicker">Управляемые</div>
+        <ul class="tight">
+          <li><b>Границы применимости.</b> Суррогат достоверен только внутри обучающего диапазона; итоговое решение проверяется полным расчётом ANSYS - это заложено в пайплайн.</li>
+          <li><b>Точность на резких откликах.</b> На резонансе R² = 0,61 - модель ловит тренд, но не точное значение пика. Решение: больше точек в зоне пика и признаки на основе физики.</li>
+        </ul>
+      </div>
+      <div class="glass reveal" style="padding:1.1rem;">
+        <div class="kicker">Вне прямого контроля</div>
+        <ul class="tight">
+          <li><b>Стоимость данных.</b> Каждая точка обучения - полный расчёт. Поэтому режим малых выборок принципиален, и именно там GPR даёт максимум преимущества.</li>
+          <li><b>Перенос на другие физики.</b> Проверено на прочности и динамике; для контакта, потери устойчивости и снап-перехода карта требует отдельной валидации.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="glass reveal" style="margin-top:.8rem; padding:.75rem 1rem; border-left:3px solid #2563eb; color:#3d5478; font-size:.9rem;">Гипотеза о безусловном превосходстве деревьев <b>не подтвердилась</b> - и это заявлено прямо. Отрицательный результат такой же результат, если он воспроизводим.</div>
+  </div>
+</div>
+
+<!-- 10 ПРИМЕНЕНИЕ ИИ -->
+<div class="slide" data-slide="10">
+  <div class="gradient-mesh"><div class="blob" style="width:300px;height:300px;top:-70px;right:-30px;background:#2563eb;opacity:.08"></div><div class="blob" style="width:260px;height:260px;bottom:-60px;left:-50px;background:#0d9488;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 10</div>
+    <h2 class="section-title reveal" style="margin:.35rem 0 .6rem;">Применение ИИ в проекте</h2>
+    <div class="reveal" style="display:flex; flex-wrap:wrap; gap:.5rem 1rem; align-items:baseline; margin-bottom:.6rem; color:#4a6183;">
+      <span style="font-size:1.4rem; font-weight:800; color:#16233a;">Два уровня</span>
+      <span style="font-size:.92rem;">ИИ как предмет исследования и ИИ как инструмент разработки</span>
+    </div>
+    <div class="glass reveal" style="padding:.5rem 1rem;">
+      <table class="t compact">
+        <thead><tr><th style="width:20%;">Этап</th><th style="width:40%;">Человек</th><th>ИИ-инструменты</th></tr></thead>
+        <tbody>
+          <tr><td>Постановка задач</td><td>Выбор физики, диапазонов, критерия негладкости</td><td>Разбор литературы, черновики формулировок</td></tr>
+          <tr><td>КЭ-модели</td><td>Макросы APDL, сетка, граничные условия, верификация по балочным формулам</td><td>Отладка синтаксиса макросов, разбор ошибок решателя</td></tr>
+          <tr><td>ML-ядро</td><td>Методика сравнения, выбор метрик, трактовка результата</td><td>Каркас пайплайна, зоопарк моделей, Optuna-тюнинг</td></tr>
+          <tr><td>Инженерия</td><td>Архитектура репозитория, что выносить наружу</td><td>Docker, GitHub Actions, тесты, README</td></tr>
+          <tr><td>Подача</td><td>Финальные цифры, честные оговорки</td><td>Черновики документов, HTML-презентация</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="glass reveal" style="margin-top:.7rem; padding:.7rem 1rem; border-left:3px solid #0d9488; color:#3d5478; font-size:.9rem; line-height:1.5;"><b style="color:#16233a;">Принцип:</b> ИИ ускоряет рутину и код, но постановка задачи, конечно-элементные модели и интерпретация результата - авторские. Ни одно число в работе не сгенерировано - все получены прогонами ANSYS и кросс-валидацией.</div>
+  </div>
+</div>
+
+<!-- 11 ИНЖЕНЕРИЯ -->
+<div class="slide" data-slide="11">
+  <div class="gradient-mesh"><div class="blob" style="width:320px;height:320px;top:-70px;left:-40px;background:#0d9488;opacity:.08"></div><div class="blob" style="width:280px;height:280px;bottom:-60px;right:-50px;background:#2563eb;opacity:.08"></div></div>
+  <div class="content">
+    <div class="kicker reveal">Слайд 11</div>
+    <h2 class="section-title reveal" style="margin:.4rem 0 .9rem;">Инженерия и воспроизводимость</h2>
+    <div class="grid4">
+      <div class="glass reveal" style="padding:.9rem;"><div class="kicker">Запуск</div><div style="margin-top:.45rem; color:#3d5478; font-size:.9rem;"><code style="background:rgba(37,99,235,.08); padding:.15rem .4rem; border-radius:6px;">docker compose up</code> поднимает демо одной командой.</div></div>
+      <div class="glass reveal" style="padding:.9rem;"><div class="kicker">CI</div><div style="margin-top:.45rem; color:#3d5478; font-size:.9rem;">GitHub Actions: линтер и тесты на каждый push, статус зелёный.</div></div>
+      <div class="glass reveal" style="padding:.9rem;"><div class="kicker">Воспроизводимость</div><div style="margin-top:.45rem; color:#3d5478; font-size:.9rem;">Фиксированные сиды, данные в репозитории, полный прогон одной командой.</div></div>
+      <div class="glass reveal" style="padding:.9rem;"><div class="kicker">Открытость</div><div style="margin-top:.45rem; color:#3d5478; font-size:.9rem;">Лицензия MIT, макросы APDL и все выборки опубликованы.</div></div>
+    </div>
+    <div class="glass reveal" style="margin-top:.9rem; padding:1rem 1.1rem;">
+      <div style="font-weight:700; color:#16233a; margin-bottom:.5rem;">Что лежит в репозитории</div>
+      <div style="color:#3d5478; font-size:.9rem; line-height:1.6;"><b>src/</b> - модели, кросс-валидация, Optuna, оптимизация · <b>apdl/</b> - параметрические макросы ANSYS · <b>fea/</b> - генерация выборок и пакетный запуск решателя · <b>data/</b> - 1000 расчётов в CSV · <b>app/</b> - Streamlit-демо · <b>tests/</b>, <b>Dockerfile</b>, <b>CI</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 МАТЕРИАЛЫ -->
+<div class="slide" data-slide="12">
+  <div class="gradient-mesh">
+    <div class="blob" style="width:460px;height:460px;top:-120px;right:-120px;background:#2563eb;opacity:.1"></div>
+    <div class="blob" style="width:320px;height:320px;bottom:-80px;left:-60px;background:#0d9488;opacity:.1"></div>
+  </div>
+  <div class="content" style="text-align:center;">
+    <div class="kicker reveal">Слайд 12</div>
+    <h2 class="big-title reveal" style="font-size:clamp(2rem,4.2vw,3.6rem); margin:.4rem 0 .6rem; background:linear-gradient(135deg,#16233a 0%,#2563eb 50%,#0d9488 100%); -webkit-background-clip:text; background-clip:text; color:transparent;">Материалы проекта</h2>
+    <p class="reveal" style="max-width:60ch; margin:0 auto .9rem; color:#4a6183; font-size:1rem;">Репозиторий с README, архитектурой, метриками и запуском одной командой. Видео-демо на 90 секунд.</p>
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1.2rem; max-width:860px; margin:0 auto;">
+      <div class="glass qr reveal" style="padding:1rem;">
+        <div class="kicker">README · GitHub</div>
+        <div style="margin-top:.4rem; color:#16233a; font-weight:700; font-size:.92rem;">Код, данные, метрики, docker compose</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&margin=10&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR README" style="margin-top:.7rem;">
+      </div>
+      <!-- ЗАМЕНИТЬ ссылку ниже на URL записанного видео-демо -->
+      <div class="glass qr reveal" style="padding:1rem;">
+        <div class="kicker">Видео-демо</div>
+        <div style="margin-top:.4rem; color:#16233a; font-weight:700; font-size:.92rem;">Сравнение моделей на реальных данных ANSYS</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&margin=10&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark%23-демо" alt="QR демо" style="margin-top:.7rem;">
+      </div>
+    </div>
+    <div class="glass reveal" style="margin:1rem auto 0; max-width:860px; padding:.8rem 1rem; border-left:3px solid #f97316; text-align:left; color:#3d5478; font-size:.92rem; line-height:1.5;"><b style="color:#16233a;">Дальше:</b> расширить карту на контакт и потерю устойчивости, добавить физически-информированные признаки и встроить суррогатный слой в цикл автоматизированной оптимизации - в том числе поверх отечественных решателей.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav">
+  <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">05:00</span></div>
+  <button class="nav-btn" onclick="changeSlide(-1)" aria-label="Назад">&#8249;</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="changeSlide(1)" aria-label="Вперёд">&#8250;</button>
+  <span class="counter" id="counter">1 / 12</span>
+</div>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('counter');
+for (let i = 1; i <= total; i++) { const d = document.createElement('div'); d.className = 'dot' + (i===1?' active':''); d.onclick = () => goToSlide(i); dotsContainer.appendChild(d); }
+function goToSlide(n){ const prev=document.querySelector('.slide.active'); const next=document.querySelector('.slide[data-slide="'+n+'"]'); if(prev) prev.classList.remove('active'); if(next){ next.classList.add('active'); animateSlide(next);} current=n; updateNav(); }
+function changeSlide(dir){ let n=current+dir; if(n<1) n=total; if(n>total) n=1; goToSlide(n); }
+function updateNav(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active', i+1===current)); counter.textContent = current + ' / ' + total; }
+document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); changeSlide(1);} if(e.key==='ArrowLeft'){ e.preventDefault(); changeSlide(-1);} });
+let tsx=0; document.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{ const d=tsx-e.changedTouches[0].clientX; if(Math.abs(d)>50) changeSlide(d>0?1:-1); });
+function animateSlide(slide){ slide.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transition='none'; el.style.opacity='0'; el.style.transform='translateY(16px)'; el.offsetHeight; const dl=i*0.07; el.style.transition='opacity .34s ease '+dl+'s, transform .34s ease '+dl+'s'; el.style.opacity='1'; el.style.transform='translateY(0)'; }); }
+const cd=document.getElementById('countdown'), tb=document.getElementById('timerBox');
+let remaining=300;
+function paint(){ const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); cd.textContent=m+':'+s; tb.classList.toggle('warn', remaining<=120 && remaining>60); tb.classList.toggle('danger', remaining<=60); }
+paint(); setInterval(()=>{ if(remaining>0){ remaining--; paint(); } },1000);
+animateSlide(document.querySelector('.slide.active'));
+</script>
+</body>
+</html>
