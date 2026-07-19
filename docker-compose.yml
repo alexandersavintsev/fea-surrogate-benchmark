@@ -1,0 +1,8 @@
+# Демо одной командой:      docker compose up
+# Затем открой в браузере:  http://localhost:8501
+services:
+  app:
+    build: .
+    command: streamlit run app/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"

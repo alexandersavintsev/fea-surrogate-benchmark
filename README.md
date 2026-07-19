@@ -111,9 +111,17 @@ pytest -q                           # тесты
 
 ## 🐳 Docker
 
+Интерактивное демо одной командой (затем открой http://localhost:8501):
+
+```bash
+docker compose up
+```
+
+Разовый прогон бенчмарка (печатает таблицу кроссовера в терминал):
+
 ```bash
 docker build -t surrogate .
-docker run --rm -v $PWD/results:/app/results surrogate
+docker run --rm surrogate
 ```
 
 ## 🤖 Применение ИИ
