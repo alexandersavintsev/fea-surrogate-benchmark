@@ -67,6 +67,8 @@ flowchart LR
 
 Данные и обучение разделены: любой набор ANSYS-расчётов подаётся в один и тот же воспроизводимый Python-пайплайн.
 
+### Презентация проекта: https://alexandersavintsev.github.io/fea-surrogate-benchmark/presentation.html
+
 ## 🗂 Структура репозитория
 
 ```
