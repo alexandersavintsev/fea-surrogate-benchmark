@@ -390,7 +390,7 @@
 </div>
 
 <div class="nav">
-  <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">05:00</span></div>
+  <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">07:00</span></div>
   <button class="nav-btn" onclick="changeSlide(-1)" aria-label="Назад">&#8249;</button>
   <div class="dots" id="dots"></div>
   <button class="nav-btn" onclick="changeSlide(1)" aria-label="Вперёд">&#8250;</button>
@@ -411,7 +411,7 @@ let tsx=0; document.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;}
 document.addEventListener('touchend',e=>{ const d=tsx-e.changedTouches[0].clientX; if(Math.abs(d)>50) changeSlide(d>0?1:-1); });
 function animateSlide(slide){ slide.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transition='none'; el.style.opacity='0'; el.style.transform='translateY(16px)'; el.offsetHeight; const dl=i*0.07; el.style.transition='opacity .34s ease '+dl+'s, transform .34s ease '+dl+'s'; el.style.opacity='1'; el.style.transform='translateY(0)'; }); }
 const cd=document.getElementById('countdown'), tb=document.getElementById('timerBox');
-let remaining=300;
+let remaining=420;
 function paint(){ const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); cd.textContent=m+':'+s; tb.classList.toggle('warn', remaining<=120 && remaining>60); tb.classList.toggle('danger', remaining<=60); }
 paint(); setInterval(()=>{ if(remaining>0){ remaining--; paint(); } },1000);
 animateSlide(document.querySelector('.slide.active'));
