@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Технологии ИИ - Суррогаты для МКЭ - Савинцев Александр</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f6f2; --panel:#ffffff; --ink:#1a1a18; --body:#3f4a52;
+    --line:#e3ded4; --muted:#797469;
+    --teal:#0f766e; --brick:#c2410c; --navy:#1e3a5f;
+    --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Manrope',system-ui,sans-serif;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--paper); }
+  body{ font-family:var(--sans); color:var(--ink); overflow:hidden; height:100vh; width:100vw; }
+  .deck{ width:100vw; height:100vh; position:relative; }
+  .slide{ position:absolute; inset:0; background:var(--paper); display:flex; flex-direction:column; align-items:center; justify-content:center;
+          opacity:0; transform:translateY(10px); transition:opacity .45s ease, transform .45s ease; pointer-events:none; overflow:hidden; }
+  .slide.active{ opacity:1; transform:translateY(0); pointer-events:all; }
+  /* техническая сетка вместо размытых пятен */
+  .slide::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(rgba(26,26,24,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,24,.045) 1px, transparent 1px);
+    background-size:34px 34px; mask-image:radial-gradient(ellipse at center, #000 35%, transparent 88%); }
+  .glow{ position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
+  .slide > .content{ position:relative; z-index:2; width:100%; max-width:1200px; padding:clamp(1rem,2.4vw,2.4rem); }
+  /* верхний колонтитул как штамп чертежа */
+  .shead{ position:absolute; top:0; left:0; right:0; z-index:3; display:flex; justify-content:space-between; align-items:center;
+          padding:.7rem clamp(1rem,2.4vw,2.4rem); border-bottom:1px solid var(--line); background:rgba(247,246,242,.9);
+          font-family:var(--mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .shead b{ color:var(--ink); font-weight:700; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:10px; }
+  .panel.t-teal{ border-top:3px solid var(--teal); }
+  .panel.t-brick{ border-top:3px solid var(--brick); }
+  .panel.t-navy{ border-top:3px solid var(--navy); }
+  .grid2{ display:grid; grid-template-columns:1.05fr .95fr; gap:1rem; align-items:stretch; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; }
+  .kicker{ font-family:var(--mono); text-transform:uppercase; letter-spacing:.14em; font-size:.68rem; color:var(--muted); font-weight:500; }
+  .metric{ font-family:var(--mono); font-size:clamp(1.7rem,3.2vw,2.7rem); font-weight:700; line-height:1; color:var(--ink); letter-spacing:-.02em; }
+  .big-title{ font-family:var(--sans); font-weight:800; font-size:clamp(2.3rem,5.2vw,4.4rem); line-height:1; letter-spacing:-.035em; color:var(--ink); }
+  .section-title{ font-family:var(--sans); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.3rem); line-height:1.05; letter-spacing:-.02em; color:var(--ink); }
+  .rule{ width:56px; height:4px; background:var(--teal); border-radius:2px; margin:.55rem 0 .9rem; }
+  .tag{ display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .6rem; border-radius:4px; background:#fff;
+        border:1px solid var(--line); color:var(--body); font-family:var(--mono); font-size:.74rem; }
+  p,li,td{ color:var(--body); }
+  table.t{ width:100%; border-collapse:collapse; font-size:.86rem; }
+  table.t th,table.t td{ padding:.45rem .55rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+  table.t th{ font-family:var(--mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:500; }
+  table.t td.num{ font-family:var(--mono); }
+  table.t.compact th,table.t.compact td{ padding:.3rem .5rem; font-size:.79rem; }
+  .w-gpr{ color:var(--teal); font-weight:700; font-family:var(--mono); }
+  .w-boost{ color:var(--brick); font-weight:700; font-family:var(--mono); }
+  .note{ font-size:.79rem; color:var(--muted); line-height:1.5; }
+  .src{ font-size:.7rem; color:var(--muted); line-height:1.45; font-family:var(--mono); }
+  .src a{ color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(15,118,110,.3); }
+  ul.tight{ margin:.45rem 0 0; padding-left:1rem; line-height:1.5; font-size:.85rem; }
+  ul.tight li{ margin-bottom:.4rem; }
+  .reveal{ opacity:0; transform:translateY(12px); }
+  /* навигация */
+  .nav{ position:fixed; bottom:18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:10px; z-index:100;
+        background:#fff; padding:6px 12px; border-radius:8px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(26,26,24,.07); }
+  .nav-btn{ width:30px; height:30px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:6px; font-size:1rem; cursor:pointer; line-height:1; }
+  .nav-btn:hover{ background:var(--paper); }
+  .dots{ display:flex; gap:5px; }
+  .dot{ width:6px; height:6px; border-radius:1px; background:var(--line); cursor:pointer; transition:.2s; }
+  .dot.active{ background:var(--teal); transform:scaleY(2.2); }
+  .counter{ font-family:var(--mono); font-size:.72rem; color:var(--muted); min-width:46px; text-align:center; }
+  .timer{ display:flex; align-items:center; gap:.4rem; padding:.28rem .55rem; border-radius:6px; background:var(--paper);
+          border:1px solid var(--line); font-family:var(--mono); font-weight:700; font-size:.8rem; color:var(--ink); }
+  .tdot{ width:7px; height:7px; border-radius:50%; background:var(--teal); }
+  .timer.warn{ border-color:#d97706; } .timer.warn .tdot{ background:#d97706; }
+  .timer.danger{ border-color:var(--brick); } .timer.danger .tdot{ background:var(--brick); }
+  .qr img{ width:180px; height:180px; background:#fff; padding:.4rem; border:1px solid var(--line); border-radius:6px; }
+  code{ font-family:var(--mono); background:rgba(15,118,110,.08); padding:.1rem .35rem; border-radius:4px; color:var(--teal); font-size:.85em; }
+  @media (max-width:920px){ .grid2,.grid3,.grid4{ grid-template-columns:1fr; } }
+
+  @media print {
+    @page { size: 13.333in 7.5in; margin: 0; }
+    html,body {
+      width:1280px !important;
+      height:auto !important;
+      overflow:visible !important;
+      background:#fff !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+    }
+    .deck { width:1280px !important; height:auto !important; position:static !important; }
+    .slide {
+      position:relative !important;
+      inset:auto !important;
+      width:1280px !important;
+      height:720px !important;
+      opacity:1 !important;
+      transform:none !important;
+      pointer-events:auto !important;
+      page-break-after:always !important;
+      break-after:page !important;
+    }
+    .slide:last-child { page-break-after:auto !important; break-after:auto !important; }
+    .reveal { opacity:1 !important; transform:none !important; }
+    .grid2 { grid-template-columns:1.05fr .95fr !important; }
+    .grid3 { grid-template-columns:repeat(3,1fr) !important; }
+    .grid4 { grid-template-columns:repeat(4,1fr) !important; }
+    .nav { display:none !important; }
+  }
+
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 -->
+<div class="slide active" data-slide="1">
+  <div class="glow" style="width:520px;height:520px;top:-160px;right:-140px;background:var(--teal);opacity:.10"></div>
+  <div class="glow" style="width:340px;height:340px;bottom:-120px;left:-90px;background:var(--brick);opacity:.07"></div>
+  <div class="content">
+    <div class="grid2">
+      <div>
+        <div class="kicker reveal">Инженерные расчёты · Суррогатное ML-моделирование</div>
+        <h1 class="big-title reveal" style="margin:.7rem 0 0;">Суррогаты<br>для МКЭ</h1>
+        <div class="rule reveal"></div>
+        <p class="reveal" style="max-width:56ch; font-size:1.05rem; line-height:1.55; margin:0;">Параметрический расчёт в ANSYS идёт часами. Суррогатная модель обучается один раз и отвечает за миллисекунды. Проект отвечает на главный вопрос - <b style="color:var(--ink);">какую модель брать</b> - и показывает, что выбор определяется гладкостью физического отклика, а не самим фактом табличных данных.</p>
+        <div class="reveal" style="display:flex; gap:.9rem; margin-top:1.2rem; flex-wrap:wrap; font-family:var(--mono); font-size:.76rem; color:var(--muted);">
+          <span>САВИНЦЕВ АЛЕКСАНДР</span><span>ТЕХНОЛОГИИ ИИ · ЭТАП 3 · 2026</span>
+        </div>
+      </div>
+      <div class="panel t-teal reveal" style="align-self:center; padding:1.3rem;">
+        <div class="kicker">В одном кадре</div>
+        <div class="grid3" style="margin-top:.85rem;">
+          <div><div class="metric">1000</div><div class="note" style="margin-top:.2rem;">расчётов ANSYS</div></div>
+          <div><div class="metric">8</div><div class="note" style="margin-top:.2rem;">моделей в сравнении</div></div>
+          <div><div class="metric">×2653</div><div class="note" style="margin-top:.2rem;">измеренное ускорение</div></div>
+        </div>
+        <div style="height:1px; background:var(--line); margin:1rem 0;"></div>
+        <div style="display:grid; gap:.5rem; font-size:.9rem;">
+          <div>ANSYS APDL → латинский гиперкуб → 8 моделей → карта выбора.</div>
+          <div>Результат: где GPR, где бустинг - и цена ошибки в R².</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="slide" data-slide="2">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 12 · Проблема</span></div>
+  <div class="glow" style="width:400px;height:400px;top:-120px;right:-100px;background:var(--brick);opacity:.07"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Один расчёт терпим. Сотни расчётов - уже проблема</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
+    <div style="display:grid; grid-template-columns:.82fr 1.18fr; gap:1rem; align-items:stretch;">
+      <div class="panel t-brick reveal" style="padding:1.1rem;">
+        <p style="font-size:1rem; line-height:1.62; margin:0;">
+          Один расчёт ANSYS занимает секунды или минуты. Параметрическое исследование и оптимизация требуют сотен запусков, поэтому перебор растягивается на часы.
+        </p>
+        <div style="margin-top:1rem; display:grid; gap:.58rem;">
+          <div><b style="color:var(--ink);">12,9 с</b> - средний расчёт ANSYS в контрольном замере.</div>
+          <div><b style="color:var(--teal);">0,00486 с</b> - прогноз обученного GPR.</div>
+          <div><b style="color:var(--brick);">×2653</b> - измеренное ускорение одного отклика.</div>
+        </div>
+      </div>
+      <div class="panel reveal" style="padding:.55rem;">
+        <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени ANSYS и GPR" style="display:block;width:100%;height:286px;object-fit:contain;border-radius:6px;background:#fff;">
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.8rem; padding:.72rem 1rem; border-left:3px solid var(--teal); font-size:.91rem;">
+      Суррогат закрывает вопрос скорости. Открытым остаётся вопрос - <b style="color:var(--ink);">какую именно модель брать для конкретного физического отклика</b>.
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="slide" data-slide="3">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 12 · Цель и задачи</span></div>
+  <div class="glow" style="width:420px;height:420px;top:-130px;right:-100px;background:var(--teal);opacity:.07"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Цель и задачи проекта</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2">
+      <div class="panel t-teal reveal" style="padding:1.2rem;">
+        <div class="kicker">Цель</div>
+        <p style="margin:.65rem 0 0; font-size:1.08rem; line-height:1.65;">
+          Сократить число дорогих конечно-элементных расчётов с помощью ML-суррогата и определить,
+          <b style="color:var(--ink);">какую регрессионную модель выбирать</b>
+          для разных типов физического отклика.
+        </p>
+        <div style="height:1px; background:var(--line); margin:1rem 0;"></div>
+        <div style="font-size:.9rem; line-height:1.55; color:var(--navy); font-weight:700;">
+          Критерий успеха: быстрый отклик за миллисекунды, воспроизводимая оценка качества и обязательная проверка итогового решения полным расчётом.
+        </div>
+      </div>
+      <div class="panel reveal" style="padding:1.05rem 1.15rem;">
+        <div class="kicker">Задачи</div>
+        <div style="display:grid; gap:.72rem; margin-top:.75rem;">
+          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
+            <div class="metric" style="font-size:1.2rem; color:var(--teal);">01</div>
+            <div style="font-size:.91rem; line-height:1.5;">Сформировать собственные выборки на задачах с разной гладкостью отклика.</div>
+          </div>
+          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
+            <div class="metric" style="font-size:1.2rem; color:var(--teal);">02</div>
+            <div style="font-size:.91rem; line-height:1.5;">Сравнить 8 моделей по единой схеме кросс-валидации и настроить ансамбли деревьев.</div>
+          </div>
+          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
+            <div class="metric" style="font-size:1.2rem; color:var(--teal);">03</div>
+            <div style="font-size:.91rem; line-height:1.5;">Найти границу, на которой лидер меняется между GPR и градиентным бустингом.</div>
+          </div>
+          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
+            <div class="metric" style="font-size:1.2rem; color:var(--brick);">04</div>
+            <div style="font-size:.91rem; line-height:1.5;">Оформить результат как открытый воспроизводимый инструмент для инженера.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="slide" data-slide="4">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Физические отклики</span></div>
+  <div class="glow" style="width:390px;height:390px;top:-120px;right:-90px;background:var(--brick);opacity:.07"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Три физических режима в одном стиле</h2>
+    <div class="rule reveal" style="background:linear-gradient(90deg,var(--teal),var(--brick));width:110px;"></div>
+    <div class="grid3">
+      <div class="panel t-teal reveal" style="padding:.48rem;">
+        <img src="figs/kirsch_b_slice.png" alt="График зависимости напряжения от полуоси отверстия в задаче Кирша" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
+        <div style="padding:.48rem .45rem .35rem;">
+          <div class="kicker">Гладкий отклик</div>
+          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Кирш - пластина с отверстием</div>
+          <div class="note" style="margin-top:.28rem;">Три контрольных расчёта: меняется <b>b</b>, а = 10 мм, l<sub>x</sub> = l<sub>y</sub> = 100 мм.</div>
+        </div>
+      </div>
+      <div class="panel reveal" style="padding:.48rem;border-top:3px solid #b6a36a;">
+        <img src="figs/plastic_threshold.png" alt="График пластической деформации с порогом текучести" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
+        <div style="padding:.48rem .45rem .35rem;">
+          <div class="kicker">Пороговый отклик</div>
+          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Пластичность - предел текучести</div>
+          <div class="note" style="margin-top:.28rem;">200 расчётов: 56% точек перешли в пластическую область.</div>
+        </div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.48rem;">
+        <img src="figs/resonance_peak.png" alt="График резонансного пика амплитуды" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
+        <div style="padding:.48rem .45rem .35rem;">
+          <div class="kicker">Резкий отклик</div>
+          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Резонанс - пик около 9 Гц</div>
+          <div class="note" style="margin-top:.28rem;">200 расчётов: разброс амплитуды достигает 66 раз.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.7rem;padding:.68rem 1rem;border-left:3px solid var(--navy);font-size:.89rem;line-height:1.5;">
+      <b style="color:var(--ink);">Вопрос исследования:</b> в какой момент гладкости уже недостаточно и лидерство переходит от GPR к ансамблям деревьев?
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="slide" data-slide="5">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Данные ANSYS</span></div>
+  <div class="glow" style="width:360px;height:360px;bottom:-110px;right:-80px;background:var(--navy);opacity:.06"></div>
+  <div class="content">
+    <h2 class="section-title reveal">1000 расчётов: две геометрии, пять режимов</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2">
+      <div class="panel t-teal reveal" style="padding:.72rem;">
+        <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:.5rem;">
+          <div><div class="kicker">Геометрия 1</div><div style="font-weight:800;color:var(--ink);margin-top:.22rem;">Пластина с отверстием</div></div>
+          <div class="metric" style="font-size:1.35rem;">160</div>
+        </div>
+        <div style="display:grid;grid-template-columns:.82fr 1.18fr;gap:.5rem;">
+          <img src="figs/kirsch_scheme.png" alt="Схема пластины с отверстием" style="display:block;width:100%;height:190px;object-fit:contain;border-radius:5px;background:#fff;">
+          <img src="figs/kirsch_stress.png" alt="Поле напряжений пластины с отверстием" style="display:block;width:100%;height:190px;object-fit:contain;border-radius:5px;background:#fff;">
+        </div>
+        <div class="note" style="margin-top:.45rem;">Гладкий отклик: максимальное эквивалентное напряжение.</div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.72rem;">
+        <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:.5rem;">
+          <div><div class="kicker">Геометрия 2</div><div style="font-weight:800;color:var(--ink);margin-top:.22rem;">Консольно закреплённый элемент</div></div>
+          <div class="metric" style="font-size:1.35rem;color:var(--brick);">840</div>
+        </div>
+        <img src="figs/cantilever_scheme.png" alt="Схема консольно закреплённого элемента" style="display:block;width:100%;height:82px;object-fit:contain;border-radius:5px;background:#fff;">
+        <img src="figs/cantilever_stress.png" alt="Поле напряжений консольно закреплённого элемента" style="display:block;width:100%;height:108px;object-fit:contain;border-radius:5px;background:#fff;margin-top:.45rem;">
+        <div class="note" style="margin-top:.42rem;">Четыре режима: упругий, расширенный, пластический и гармонический.</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.42rem;margin-top:.65rem;">
+      <div class="panel" style="padding:.48rem;text-align:center;"><b>Кирш</b><div class="note">160</div></div>
+      <div class="panel" style="padding:.48rem;text-align:center;"><b>Упругий изгиб</b><div class="note">320</div></div>
+      <div class="panel" style="padding:.48rem;text-align:center;"><b>Широкий диапазон</b><div class="note">120</div></div>
+      <div class="panel" style="padding:.48rem;text-align:center;"><b>Пластичность</b><div class="note">200</div></div>
+      <div class="panel" style="padding:.48rem;text-align:center;"><b>Резонанс</b><div class="note">200</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="slide" data-slide="6">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Методика сравнения</span></div>
+  <div class="glow" style="width:380px;height:380px;bottom:-120px;left:-100px;background:var(--navy);opacity:.06"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Сравнение устроено одинаково для всех моделей</h2>
+    <div class="rule reveal"></div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem;">
+      <div class="panel t-navy reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">01</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Одинаковые данные</div>
+        <div class="note" style="margin-top:.3rem;">Единые выборки, признаки и целевые переменные.</div>
+      </div>
+      <div class="panel t-teal reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">02</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">5 блоков × 3 seed</div>
+        <div class="note" style="margin-top:.3rem;">Оценка не зависит от одного удачного разбиения.</div>
+      </div>
+      <div class="panel reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">03</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Четыре метрики</div>
+        <div class="note" style="margin-top:.3rem;">R², MAE, RMSE и MAPE вместо одной удобной цифры.</div>
+      </div>
+      <div class="panel reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">04</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Optuna для деревьев</div>
+        <div class="note" style="margin-top:.3rem;">Параметры ансамблей подобраны байесовской оптимизацией.</div>
+      </div>
+      <div class="panel t-teal reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">05</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Настройка GPR</div>
+        <div class="note" style="margin-top:.3rem;">Параметры ядра оцениваются по максимальному правдоподобию.</div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.9rem;">
+        <div class="metric" style="font-size:1.35rem;">06</div>
+        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Контроль механизма</div>
+        <div class="note" style="margin-top:.3rem;">Пять синтетических функций с заранее известной гладкостью.</div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.8rem; padding:.72rem 1rem; border-left:3px solid var(--teal); font-size:.9rem;">
+      Такая схема отделяет физическую закономерность от случайного разбиения или недонастроенной модели.
+    </div>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="slide" data-slide="7">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Находка</span></div>
+  <div class="glow" style="width:400px;height:400px;top:-120px;right:-110px;background:var(--brick);opacity:.08"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Находка: лидер меняется по гладкости</h2>
+    <div class="rule reveal" style="background:linear-gradient(90deg,var(--teal),var(--brick)); width:110px;"></div>
+    <div class="panel reveal" style="padding:.6rem .9rem; margin-bottom:.7rem; font-size:.86rem;">R² по k-блочной кросс-валидации, 5 блоков × 3 сида. Деревья настроены Optuna, GPR самонастраивается по правдоподобию ядра - сравнение честное.</div>
+    <div class="grid2">
+      <div class="panel reveal" style="padding:.9rem;">
+        <table class="t compact">
+          <thead><tr><th>Задача</th><th>GPR</th><th>Бустинг</th><th>Лидер</th></tr></thead>
+          <tbody>
+            <tr><td>Кирш, 100 точек</td><td class="w-gpr">1,00</td><td class="num">0,98</td><td class="w-gpr">GPR</td></tr>
+            <tr><td>Кирш, 30 точек</td><td class="w-gpr">0,99</td><td class="num">≤ 0,86</td><td class="w-gpr">GPR</td></tr>
+            <tr><td>Консоль, 80 точек</td><td class="w-gpr">0,99</td><td class="num">0,84</td><td class="w-gpr">GPR</td></tr>
+            <tr><td>Консоль, 240 точек</td><td class="w-gpr">0,90</td><td class="num">0,83</td><td class="w-gpr">GPR</td></tr>
+            <tr><td>Пластичность, 200</td><td class="w-gpr">0,99</td><td class="num">0,85</td><td class="w-gpr">GPR</td></tr>
+            <tr><td>Консоль, 120 (экстрим)</td><td class="num">0,76</td><td class="w-boost">0,88</td><td class="w-boost">бустинг</td></tr>
+            <tr><td>Резонанс, 200</td><td class="num">0,45</td><td class="w-boost">0,61</td><td class="w-boost">CatBoost</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid; gap:.6rem; align-content:start;">
+        <img src="figs/fig_crossover.png" alt="Кроссовер GPR против градиентного бустинга" class="reveal" style="width:100%; border:1px solid var(--line); border-radius:8px; background:#fff;">
+        <div class="panel reveal" style="padding:.75rem .95rem; border-left:3px solid var(--brick);">
+          <div style="font-weight:700; color:var(--ink); font-size:.9rem;">Что это меняет на практике</div>
+          <div class="note" style="margin-top:.25rem;">Тип данных сам по себе не определяет лидера. На малых выборках решающим фактором оказалась <b style="color:var(--ink);">гладкость физического отклика</b>: GPR лидирует на гладких задачах, а бустинг выходит вперёд при резкой нелинейности.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="slide" data-slide="8">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 12 · Оригинальность</span></div>
+  <div class="glow" style="width:360px;height:360px;bottom:-100px;right:-80px;background:var(--teal);opacity:.07"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Контрольный эксперимент подтвердил: дело в форме отклика</h2>
+    <div class="rule reveal"></div>
+    <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:.9rem;align-items:stretch;">
+      <div class="panel reveal" style="padding:.5rem;">
+        <img src="figs/synthetic_functions.png" alt="Синтетические функции с контролируемой гладкостью" style="display:block;width:100%;height:270px;object-fit:contain;border-radius:6px;background:#fff;">
+        <div class="note" style="padding:.35rem .45rem .05rem;">Пять функций по 400 точек: меняется только гладкость, остальные условия контролируются.</div>
+      </div>
+      <div style="display:grid;gap:.58rem;">
+        <div class="panel t-teal reveal" style="padding:.7rem .85rem;">
+          <div class="kicker">Наблюдение в ANSYS</div>
+          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">GPR лидирует на плавных откликах</div>
+        </div>
+        <div class="panel t-navy reveal" style="padding:.7rem .85rem;">
+          <div class="kicker">Смена лидера</div>
+          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">CatBoost выигрывает на остром резонансном пике</div>
+        </div>
+        <div class="panel t-brick reveal" style="padding:.7rem .85rem;">
+          <div class="kicker">Контроль</div>
+          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">Тот же переход повторился на синтетических функциях</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.72rem;padding:.72rem 1rem;border-left:3px solid var(--teal);font-size:.9rem;line-height:1.5;">
+      <b style="color:var(--ink);">Оригинальность проекта:</b> получено проверяемое правило выбора суррогата. Для гладкого отклика и малой выборки подходит GPR, для резкого пика преимущество получает бустинг.
+    </div>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="slide" data-slide="9">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 12 · Демо</span></div>
+  <div class="glow" style="width:430px;height:430px;top:-130px;right:-100px;background:var(--teal);opacity:.07"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Демо: от CSV к сравнению моделей</h2>
+    <div class="rule reveal"></div>
+    <div style="display:grid; grid-template-columns:1.55fr .75fr; gap:.9rem; align-items:stretch;">
+      <div class="panel reveal" style="padding:.55rem; overflow:hidden;">
+        <img src="figs/streamlit_demo.png" alt="Интерфейс Streamlit-демо" style="display:block; width:100%; height:300px; object-fit:cover; object-position:top; border-radius:6px;">
+      </div>
+      <div class="panel t-teal reveal" style="padding:1rem;">
+        <div class="kicker">Live · 60-90 секунд</div>
+        <div style="display:grid; gap:.68rem; margin-top:.75rem;">
+          <div><b style="color:var(--teal);">01</b> Загружаю CSV расчётов ANSYS.</div>
+          <div><b style="color:var(--teal);">02</b> Выбираю целевую величину.</div>
+          <div><b style="color:var(--teal);">03</b> Запускаю k-fold сравнение.</div>
+          <div><b style="color:var(--brick);">04</b> Получаю таблицу, график и лидера.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.75rem; padding:.7rem 1rem; text-align:center; font-family:var(--mono); font-size:.84rem; border-top:3px solid var(--teal);">
+      CSV ANSYS&nbsp;&nbsp;→&nbsp;&nbsp;8 моделей&nbsp;&nbsp;→&nbsp;&nbsp;5-fold CV&nbsp;&nbsp;→&nbsp;&nbsp;метрики и лидер
+    </div>
+  </div>
+</div>
+
+<!-- 10 -->
+<div class="slide" data-slide="10">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 12 · Проверка результата</span></div>
+  <div class="glow" style="width:390px;height:390px;bottom:-120px;left:-90px;background:var(--brick);opacity:.06"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Что именно проверяется после прогноза суррогата</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.6rem;align-items:stretch;">
+      <div class="panel t-navy reveal" style="padding:1rem;">
+        <div class="metric" style="font-size:1.4rem;">01</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.35rem;">Границы выборки</div>
+        <div class="note" style="margin-top:.35rem;line-height:1.5;">Параметры кандидата должны находиться внутри исследованного диапазона DOE.</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--teal);font-size:1.6rem;font-weight:900;">→</div>
+      <div class="panel t-teal reveal" style="padding:1rem;">
+        <div class="metric" style="font-size:1.4rem;">02</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.35rem;">Форма отклика</div>
+        <div class="note" style="margin-top:.35rem;line-height:1.5;">Около порога или резонанса добавляются точки, чтобы не пропустить излом или пик.</div>
+      </div>
+      <div style="display:flex;align-items:center;color:var(--teal);font-size:1.6rem;font-weight:900;">→</div>
+      <div class="panel t-brick reveal" style="padding:1rem;">
+        <div class="metric" style="font-size:1.4rem;color:var(--brick);">03</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.35rem;">Полный расчёт ANSYS</div>
+        <div class="note" style="margin-top:.35rem;line-height:1.5;">Проверяются напряжения, перемещения и заданные инженерные ограничения.</div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.85rem;padding:1rem 1.1rem;">
+      <div class="kicker">Если проверка не пройдена</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.55rem;align-items:center;margin-top:.6rem;text-align:center;">
+        <div class="panel" style="padding:.72rem;"><b>Новая точка ANSYS</b></div>
+        <div style="color:var(--brick);font-weight:900;">→</div>
+        <div class="panel" style="padding:.72rem;"><b>Обновление выборки</b></div>
+        <div style="color:var(--brick);font-weight:900;">→</div>
+        <div class="panel" style="padding:.72rem;"><b>Переобучение суррогата</b></div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.72rem;padding:.65rem 1rem;text-align:center;font-size:.89rem;">
+      Проверяется применимость прогноза к конкретному кандидату, а не только средняя точность модели.
+    </div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="slide" data-slide="11">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 12 · Технологии и воспроизводимость</span></div>
+  <div class="glow" style="width:390px;height:390px;top:-120px;right:-90px;background:var(--navy);opacity:.06"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Весь путь воспроизводится: от APDL до демо</h2>
+    <div class="rule reveal"></div>
+    <div class="panel reveal" style="padding:.9rem;">
+      <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:.45rem;align-items:center;text-align:center;">
+        <div class="panel t-navy" style="padding:.72rem .45rem;"><div class="kicker">01 · Расчёт</div><div style="font-weight:800;color:var(--ink);margin-top:.3rem;">ANSYS APDL</div><div class="note">PLANE182, LHS</div></div>
+        <div style="font-size:1.35rem;color:var(--teal);font-weight:900;">→</div>
+        <div class="panel" style="padding:.72rem .45rem;"><div class="kicker">02 · Данные</div><div style="font-weight:800;color:var(--ink);margin-top:.3rem;">CSV + pandas</div><div class="note">1000 расчётов</div></div>
+        <div style="font-size:1.35rem;color:var(--teal);font-weight:900;">→</div>
+        <div class="panel t-teal" style="padding:.72rem .45rem;"><div class="kicker">03 · ML</div><div style="font-weight:800;color:var(--ink);margin-top:.3rem;">scikit-learn</div><div class="note">GPR, деревья, Optuna</div></div>
+        <div style="font-size:1.35rem;color:var(--teal);font-weight:900;">→</div>
+        <div class="panel t-brick" style="padding:.72rem .45rem;"><div class="kicker">04 · Интерфейс</div><div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Streamlit</div><div class="note">сравнение моделей</div></div>
+      </div>
+    </div>
+    <div class="grid3" style="margin-top:.8rem;">
+      <div class="panel t-teal reveal" style="padding:.9rem;">
+        <div class="kicker">Автоматические проверки</div>
+        <div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span class="tag">pytest</span><span class="tag">Ruff</span><span class="tag">GitHub Actions</span></div>
+        <div class="note" style="margin-top:.5rem;">CI запускает тесты и проверяет критические ошибки.</div>
+      </div>
+      <div class="panel t-navy reveal" style="padding:.9rem;">
+        <div class="kicker">Повторяемые эксперименты</div>
+        <div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;"><span class="tag">фиксированные seed</span><span class="tag">данные</span><span class="tag">конфиги</span></div>
+        <div class="note" style="margin-top:.5rem;">Результаты можно перепроверить на тех же выборках.</div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.9rem;">
+        <div class="kicker">Запуск одной командой</div>
+        <div style="margin-top:.6rem;background:#0d2232;color:#dff6f2;border-radius:6px;padding:.68rem;font-family:var(--mono);font-size:.76rem;">docker compose up</div>
+        <div class="note" style="margin-top:.5rem;">Демо и окружение поднимаются в контейнере.</div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.7rem;padding:.58rem 1rem;text-align:center;font-size:.85rem;">
+      Открытый репозиторий · MIT License · README с командами запуска
+    </div>
+  </div>
+</div>
+
+<!-- 12 -->
+<div class="slide" data-slide="12">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Итог и материалы</span></div>
+  <div class="glow" style="width:430px;height:430px;top:-140px;right:-110px;background:var(--teal);opacity:.08"></div>
+  <div class="content">
+    <h2 class="section-title reveal">Результат - не «лучшая модель», а правило выбора</h2>
+    <div class="rule reveal" style="width:120px;background:linear-gradient(90deg,var(--teal),var(--brick));"></div>
+    <div style="display:grid;grid-template-columns:1.18fr .82fr;gap:.9rem;align-items:stretch;">
+      <div class="panel reveal" style="padding:1rem 1.1rem;">
+        <div style="display:grid;gap:.78rem;">
+          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
+            <div class="metric" style="font-size:1.65rem;">1000</div>
+            <div><b style="color:var(--ink);">собственных расчётов ANSYS</b><div class="note">пять физических постановок</div></div>
+          </div>
+          <div style="height:1px;background:var(--line);"></div>
+          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
+            <div class="metric" style="font-size:1.38rem;color:var(--teal);">GPR</div>
+            <div><b style="color:var(--ink);">для гладких откликов и малых выборок</b><div class="note">R² до 0,99</div></div>
+          </div>
+          <div style="height:1px;background:var(--line);"></div>
+          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
+            <div class="metric" style="font-size:1.18rem;color:var(--brick);">CatBoost</div>
+            <div><b style="color:var(--ink);">для резкого резонансного отклика</b><div class="note">0,61 против 0,45 у GPR</div></div>
+          </div>
+          <div style="height:1px;background:var(--line);"></div>
+          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
+            <div class="metric" style="font-size:1.35rem;color:var(--navy);">Open</div>
+            <div><b style="color:var(--ink);">код, данные, тесты и демо</b><div class="note">проект можно запустить и перепроверить</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;align-content:start;">
+        <div class="panel t-teal reveal" style="padding:.72rem;text-align:center;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR репозитория" style="width:128px;height:128px;border-radius:5px;background:#fff;">
+          <div class="kicker" style="margin-top:.42rem;">Репозиторий</div>
+        </div>
+        <div class="panel t-navy reveal" style="padding:.72rem;text-align:center;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark%2Fblob%2Fmain%2Fdocs%2Fproject_description.md" alt="QR описания проекта" style="width:128px;height:128px;border-radius:5px;background:#fff;">
+          <div class="kicker" style="margin-top:.42rem;">Описание</div>
+        </div>
+        <div class="panel t-brick reveal" style="grid-column:1 / -1;padding:.78rem 1rem;">
+          <div class="kicker">Следующий шаг</div>
+          <div style="font-weight:800;color:var(--ink);margin-top:.35rem;">Проверить правило на контакте и потере устойчивости</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:.7rem;padding:.65rem 1rem;text-align:center;font-size:.92rem;font-weight:800;color:var(--ink);">
+      Суррогат выбирается по форме физического отклика, а финальный вариант проверяется полным расчётом.
+    </div>
+  </div>
+</div></div>
+
+<div class="nav">
+  <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">10:00</span></div>
+  <button class="nav-btn" onclick="changeSlide(-1)" aria-label="Назад">&#8249;</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="changeSlide(1)" aria-label="Вперёд">&#8250;</button>
+  <span class="counter" id="counter">1 / 12</span>
+</div>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('counter');
+for (let i=1;i<=total;i++){ const d=document.createElement('div'); d.className='dot'+(i===1?' active':''); d.onclick=()=>goToSlide(i); dotsContainer.appendChild(d); }
+function goToSlide(n){ const p=document.querySelector('.slide.active'), x=document.querySelector('.slide[data-slide="'+n+'"]'); if(p)p.classList.remove('active'); if(x){x.classList.add('active'); animateSlide(x);} current=n; updateNav(); }
+function changeSlide(d){ let n=current+d; if(n<1)n=total; if(n>total)n=1; goToSlide(n); }
+function updateNav(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===current)); counter.textContent=current+' / '+total; }
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();changeSlide(1);} if(e.key==='ArrowLeft'){e.preventDefault();changeSlide(-1);} });
+let tsx=0; document.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{ const d=tsx-e.changedTouches[0].clientX; if(Math.abs(d)>50) changeSlide(d>0?1:-1); });
+function animateSlide(s){ s.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transition='none'; el.style.opacity='0'; el.style.transform='translateY(12px)'; el.offsetHeight; const dl=i*0.06; el.style.transition='opacity .3s ease '+dl+'s, transform .3s ease '+dl+'s'; el.style.opacity='1'; el.style.transform='translateY(0)'; }); }
+const cd=document.getElementById('countdown'), tb=document.getElementById('timerBox');
+let remaining=600;
+function paint(){ const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); cd.textContent=m+':'+s; tb.classList.toggle('warn',remaining<=120&&remaining>60); tb.classList.toggle('danger',remaining<=60); }
+paint(); setInterval(()=>{ if(remaining>0){remaining--;paint();} },1000);
+animateSlide(document.querySelector('.slide.active'));
+</script>
+</body>
+</html>
