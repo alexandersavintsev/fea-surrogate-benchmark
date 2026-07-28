@@ -135,74 +135,69 @@
 <div class="slide" data-slide="2" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 12 · Проблема</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Инженеру нужен быстрый перебор, но доверяет он полному расчёту</h2>
+    <h2 class="section-title reveal">Проблема</h2>
     <div class="rule reveal" style="background:var(--brick);"></div>
     <div class="grid2">
       <div class="panel t-brick reveal" style="padding:1rem;">
-        <div class="kicker">Болевой сценарий</div>
-        <p style="font-size:.92rem;line-height:1.5;margin:.4rem 0 0;">Инженер-расчётчик подбирает геометрию и нагрузку. Один запуск ANSYS занимает секунды или минуты, а для исследования нужны сотни вариантов.</p>
-        <div class="figure-frame" style="height:170px;margin-top:.65rem;">
-          <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени расчёта ANSYS и прогноза GPR">
+        <p style="font-size:.96rem;line-height:1.55;margin:0;">Инженер-расчётчик подбирает геометрию и нагрузку перебором. Один расчёт в ANSYS занимает от секунд до минут, а параметрическое исследование требует <b style="color:var(--ink);">сотен и тысяч запусков</b>. Перебор растягивается на часы и сутки, вариантов проверяется меньше, чем нужно, а оптимум часто ищется вручную.</p>
+        <div style="margin-top:.8rem;display:flex;flex-wrap:wrap;gap:.4rem;">
+          <span class="tag">Долгий перебор</span>
+          <span class="tag">Мало проверенных вариантов</span>
+          <span class="tag">Риск пропустить оптимум</span>
         </div>
-        <div class="src" style="margin-top:.35rem;">Измерение в проекте: 12,9 с против 0,00486 с на один отклик, около 2650 раз.</div>
+        <div class="panel" style="margin-top:.75rem;padding:.65rem;border-left:3px solid var(--brick);font-size:.82rem;line-height:1.45;"><b style="color:var(--ink);">Задача:</b> ускорить массовую оценку вариантов, не выдавая ML-прогноз за окончательный инженерный расчёт.</div>
       </div>
       <div class="panel t-navy reveal" style="padding:1rem;">
-        <div class="kicker">Четыре подхода</div>
-        <table class="t compact" style="margin-top:.4rem;">
-          <thead><tr><th>Подход</th><th>Скорость</th><th>Ограничение</th></tr></thead>
-          <tbody>
-            <tr><td>Инженерная формула</td><td class="num">мгновенно</td><td>простая геометрия и физика</td></tr>
-            <tr><td>Полный расчёт ANSYS</td><td class="num">секунды / минуты</td><td>дорогой массовый перебор</td></tr>
-            <tr><td>Один суррогат</td><td class="num">миллисекунды</td><td>неясно, какую модель выбрать</td></tr>
-            <tr><td><b style="color:var(--teal);">Этот проект</b></td><td class="num"><b>миллисекунды</b></td><td><b>выбор модели + проверка</b></td></tr>
-          </tbody>
-        </table>
-        <div class="panel" style="margin-top:.65rem;padding:.6rem;border-left:3px solid var(--brick);font-size:.8rem;line-height:1.4;">Задача проекта - не заменить ANSYS, а сократить число дорогих запусков и честно обозначить границу применимости ML.</div>
+        <div class="kicker">Измерение в проекте</div>
+        <div class="figure-frame" style="height:215px;margin-top:.45rem;">
+          <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени расчёта ANSYS и прогноза GPR">
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.65rem;text-align:center;">
+          <div><div class="metric" style="font-size:1.55rem;">12,9 с</div><div class="note">ANSYS</div></div>
+          <div><div class="metric" style="font-size:1.55rem;">0,00486 с</div><div class="note">GPR</div></div>
+          <div><div class="metric" style="font-size:1.55rem;color:var(--brick);">≈2650×</div><div class="note">ускорение</div></div>
+        </div>
+        <div class="panel" style="margin-top:.65rem;padding:.6rem;border-left:3px solid var(--teal);font-size:.8rem;line-height:1.4;">Скорость суррогат даёт. Открытый вопрос проекта - <b style="color:var(--ink);">какую модель выбирать для разной физики</b>.</div>
       </div>
     </div>
   </div>
 </div>
-
 <!-- 3 -->
 <div class="slide" data-slide="3" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 12 · Аудитория и рынок</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Кому это нужно и почему сейчас</h2>
+    <h2 class="section-title reveal">Аудитория и рынок</h2>
     <div class="rule reveal"></div>
     <div class="grid2">
-      <div class="panel reveal" style="padding:.9rem;">
+      <div class="panel t-teal reveal" style="padding:.8rem;">
         <table class="t compact">
           <thead><tr><th>Роль</th><th>Кто</th><th>Зачем</th></tr></thead>
           <tbody>
-            <tr><td>Пользователь</td><td>Инженер-расчётчик</td><td>Перебирать варианты за минуты</td></tr>
-            <tr><td>Заказчик</td><td>Расчётное подразделение КБ или завода</td><td>Успевать в срок, считать больше вариантов</td></tr>
-            <tr><td>Получатель пользы</td><td>Конструктор, руководитель проекта</td><td>Более лёгкая и надёжная конструкция</td></tr>
+            <tr><td>Пользователь</td><td>Инженер-расчётчик</td><td>Быстро перебирать варианты</td></tr>
+            <tr><td>Заказчик</td><td>Расчётное подразделение</td><td>Успевать в срок</td></tr>
+            <tr><td>Получатель пользы</td><td>Конструктор, руководитель</td><td>Лёгкая и надёжная конструкция</td></tr>
           </tbody>
         </table>
-        <div style="height:1px;background:var(--line);margin:.7rem 0;"></div>
-        <div class="kicker">Текущий выбор</div>
-        <ul class="tight" style="font-size:.79rem;">
-          <li><b style="color:var(--ink);">ANSYS Workbench / APDL:</b> полный расчёт и ручной параметрический перебор.</li>
-          <li><b style="color:var(--ink);">ANSYS optiSLang:</b> коммерческий модуль оптимизации и метамоделей.</li>
-          <li><b style="color:var(--teal);">Наш подход:</b> открытый воспроизводимый бенчмарк с явными метриками выбора.</li>
-        </ul>
+        <div class="panel" style="margin-top:.65rem;padding:.65rem;border-left:3px solid var(--navy);font-size:.79rem;line-height:1.45;"><b style="color:var(--ink);">Конкуренты и альтернативы:</b> ANSYS Workbench / APDL для полного расчёта и ручного перебора; ANSYS optiSLang для коммерческой оптимизации и автоматического подбора метамодели.</div>
+        <div class="panel" style="margin-top:.5rem;padding:.65rem;border-left:3px solid var(--teal);font-size:.79rem;line-height:1.45;"><b style="color:var(--teal);">Наше отличие:</b> открытый воспроизводимый бенчмарк с явными метриками, границами применимости и правилом выбора модели.</div>
       </div>
-      <div class="panel t-navy reveal" style="padding:1rem;display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;align-content:center;">
-        <div><div class="metric" style="font-size:2rem;">50 млрд ₽</div><div class="note" style="margin-top:.25rem;">рынок инженерного ПО в России, 2024</div></div>
-        <div><div class="metric" style="font-size:2rem;">16%/год</div><div class="note" style="margin-top:.25rem;">оценка темпа роста</div></div>
-        <div><div class="metric" style="font-size:2rem;">15-20%</div><div class="note" style="margin-top:.25rem;">доля отечественного ПО для проектирования и расчётов</div></div>
-        <div><div class="metric" style="font-size:2rem;">61%</div><div class="note" style="margin-top:.25rem;">предприятий радиоэлектроники используют иностранные CAE</div></div>
-        <div class="src" style="grid-column:1 / 3;padding-top:.55rem;border-top:1px solid var(--line);">Источники: Strategy Partners, Коммерсантъ. CAE - программы инженерных расчётов, включая ANSYS.</div>
+      <div class="panel t-navy reveal" style="padding:.9rem;">
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;">
+          <div><a href="https://strategy.ru/news/rynok-inzhenernogo-po-v-rossii-budet-rasti-na-16-ezhegodno-do-2030-goda-315/" target="_blank" style="color:inherit;text-decoration:none;"><div class="metric" style="font-size:2rem;">50 млрд ₽</div><div class="note" style="margin-top:.25rem;">рынок инженерного ПО в России, 2024</div></a></div>
+          <div><a href="https://strategy.ru/news/rynok-inzhenernogo-po-v-rossii-budet-rasti-na-16-ezhegodno-do-2030-goda-315/" target="_blank" style="color:inherit;text-decoration:none;"><div class="metric" style="font-size:2rem;">16%/год</div><div class="note" style="margin-top:.25rem;">оценка роста до 2030 года</div></a></div>
+          <div style="grid-column:1 / 3;"><a href="https://www.kommersant.ru/doc/8271583" target="_blank" style="color:inherit;text-decoration:none;"><div class="metric" style="font-size:2rem;">61%</div><div class="note" style="margin-top:.25rem;">предприятий радиоэлектроники используют иностранные CAE</div></a></div>
+        </div>
+        <div class="panel" style="margin-top:.8rem;padding:.75rem;border-left:3px solid var(--brick);font-size:.83rem;line-height:1.5;"><b style="color:var(--ink);">Зачем эти цифры:</b> рынок существует и растёт, но промышленность по-прежнему зависит от иностранных расчётных систем. Открытые инструменты проверки и ускорения расчётов нужны именно сейчас.</div>
+        <div class="src" style="margin-top:.55rem;">Источники: <a href="https://strategy.ru/news/rynok-inzhenernogo-po-v-rossii-budet-rasti-na-16-ezhegodno-do-2030-goda-315/" target="_blank" style="color:var(--teal);">Strategy Partners</a>, <a href="https://www.kommersant.ru/doc/8271583" target="_blank" style="color:var(--teal);">Коммерсантъ</a>. CAE - программы инженерных расчётов, включая ANSYS.</div>
       </div>
     </div>
   </div>
 </div>
-
 <!-- 4 -->
 <div class="slide" data-slide="4" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Задачи и решение</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Продукт и решение</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Сначала физическая задача, потом ML</h2>
+    <h2 class="section-title reveal">Продукт и решение</h2>
     <div class="rule reveal"></div>
     <div class="grid2" style="grid-template-columns:.9fr 1.1fr;">
       <div class="panel t-teal reveal" style="padding:.8rem;">
@@ -225,14 +220,13 @@
       </div>
     </div>
     <div class="flow reveal" style="margin-top:.65rem;">
-      <div class="panel"><div class="kicker">01</div><div class="note" style="margin-top:.25rem;">Диапазоны геометрии и нагрузок</div></div>
-      <div class="panel"><div class="kicker">02</div><div class="note" style="margin-top:.25rem;">LHS выбирает точки эксперимента</div></div>
-      <div class="panel"><div class="kicker">03</div><div class="note" style="margin-top:.25rem;">APDL запускает ANSYS пакетно</div></div>
-      <div class="panel"><div class="kicker">04</div><div class="note" style="margin-top:.25rem;">CSV становится выборкой для ML</div></div>
+      <div class="panel"><div class="kicker">01 · Постановка</div><div class="note" style="margin-top:.25rem;">Геометрия, материал, нагрузки и нужный физический отклик.</div></div>
+      <div class="panel"><div class="kicker">02 · План</div><div class="note" style="margin-top:.25rem;">LHS равномерно выбирает сочетания параметров.</div></div>
+      <div class="panel"><div class="kicker">03 · Расчёт</div><div class="note" style="margin-top:.25rem;">APDL подставляет параметры и пакетно запускает ANSYS.</div></div>
+      <div class="panel"><div class="kicker">04 · Суррогат</div><div class="note" style="margin-top:.25rem;">Входы и отклики образуют CSV-выборку для ML.</div></div>
     </div>
   </div>
 </div>
-
 <!-- 5 -->
 <div class="slide" data-slide="5" data-criteria="Data Science · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Специфика данных</span></div>
@@ -240,81 +234,76 @@
     <h2 class="section-title reveal">Специфика данных</h2>
     <div class="rule reveal"></div>
     <div class="grid2">
-      <div class="panel t-teal reveal" style="padding:.9rem;">
+      <div class="panel t-teal reveal" style="padding:.85rem;">
         <table class="t compact">
-          <thead><tr><th>Физическая постановка</th><th>Точек</th><th>Режим</th></tr></thead>
+          <thead><tr><th>Особенность</th><th>Как решено</th></tr></thead>
           <tbody>
-            <tr><td>Кирш, пластина с отверстием</td><td class="num">160</td><td>гладкий</td></tr>
-            <tr><td>Консоль, упругий изгиб</td><td class="num">320</td><td>гладкий</td></tr>
-            <tr><td>Консоль, расширенный диапазон</td><td class="num">120</td><td>жёсткий</td></tr>
-            <tr><td>Упругопластический изгиб</td><td class="num">200</td><td>пороговый</td></tr>
-            <tr><td>Гармонический резонанс</td><td class="num">200</td><td>резкий</td></tr>
-            <tr><td><b>Итого</b></td><td class="num"><b>1000</b></td><td><b>5 наборов</b></td></tr>
+            <tr><td>Каждая точка требует полного расчёта</td><td>LHS покрывает диапазон без полного перебора</td></tr>
+            <tr><td>Пять разных физических режимов</td><td>Каждая постановка оценивается отдельно</td></tr>
+            <tr><td>Малые выборки</td><td>5-fold cross-validation на 3 random seed</td></tr>
+            <tr><td>Пик и порог похожи на выбросы</td><td>Критические точки сохраняются как сигнал</td></tr>
+            <tr><td>Разные масштабы признаков</td><td>Масштабирование внутри ML-пайплайна</td></tr>
           </tbody>
         </table>
-        <div class="src" style="margin-top:.45rem;">Все точки рассчитаны автором в ANSYS Mechanical APDL по плану LHS.</div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;">
-        <div class="panel t-navy reveal" style="padding:.8rem;"><div class="kicker">Не одна таблица</div><div class="note" style="margin-top:.35rem;">У каждой постановки свои входы, выходы и физический смысл.</div></div>
-        <div class="panel t-navy reveal" style="padding:.8rem;"><div class="kicker">Малые выборки</div><div class="note" style="margin-top:.35rem;">Каждая новая строка требует отдельного полного расчёта.</div></div>
-        <div class="panel t-brick reveal" style="padding:.8rem;"><div class="kicker">Выброс или сигнал?</div><div class="note" style="margin-top:.35rem;">Пик резонанса и точки после текучести нельзя удалять как шум.</div></div>
-        <div class="panel t-teal reveal" style="padding:.8rem;"><div class="kicker">Контроль качества</div><div class="note" style="margin-top:.35rem;">Проверялись сходимость решателя, диапазоны и физическая правдоподобность откликов.</div></div>
-        <div class="panel reveal" style="grid-column:1 / 3;padding:.75rem;border-left:3px solid var(--teal);font-size:.81rem;line-height:1.45;">Предобработка здесь не про очистку пользовательских данных: главное - не смешать физические режимы и сохранить редкие, но содержательные области отклика.</div>
+      <div class="panel t-navy reveal" style="padding:1rem;display:grid;align-content:center;gap:.85rem;">
+        <div><div class="metric" style="font-size:2.25rem;">1000</div><div class="note">собственных расчётов ANSYS</div></div>
+        <div><div class="metric" style="font-size:2.25rem;">5</div><div class="note">физических постановок</div></div>
+        <div><div class="metric" style="font-size:2.25rem;">100%</div><div class="note">данных сгенерированы автором</div></div>
+        <div class="panel" style="padding:.65rem;border-left:3px solid var(--brick);font-size:.8rem;line-height:1.45;">Здесь предобработка нужна не для удаления «плохих» строк, а для сохранения физически важных режимов.</div>
       </div>
     </div>
   </div>
 </div>
-
 <!-- 6 -->
 <div class="slide" data-slide="6" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Модели и эксперимент</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Методология</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Восемь моделей сравнивались по одному протоколу</h2>
+    <h2 class="section-title reveal">Методология эксперимента</h2>
     <div class="rule reveal"></div>
-    <div class="model-tags reveal" style="margin-bottom:.7rem;">
-      <span class="tag">Ridge</span><span class="tag">GPR</span><span class="tag">MLP</span><span class="tag">Random Forest</span>
-      <span class="tag">Gradient Boosting</span><span class="tag">XGBoost</span><span class="tag">LightGBM</span><span class="tag">CatBoost</span>
-    </div>
     <div class="grid2">
-      <div class="panel t-teal reveal" style="padding:.9rem;">
-        <div class="kicker">Контролируемый эксперимент</div>
-        <ul class="tight">
-          <li><b style="color:var(--ink);">5-fold cross-validation × 3 random seed</b> на одинаковых разбиениях.</li>
-          <li>Метрики: R², MAE, RMSE и MAPE.</li>
-          <li>Пять ансамблей деревьев настроены через Optuna.</li>
-          <li>GPR оптимизирует параметры ядра по правдоподобию.</li>
-          <li>Итоговые выводы дополнительно проверены физическими формулами.</li>
-        </ul>
-      </div>
-      <div class="panel t-navy reveal" style="padding:.9rem;">
-        <table class="t compact">
-          <thead><tr><th>Готовые компоненты</th><th>Сделано самостоятельно</th></tr></thead>
+      <div class="panel t-teal reveal" style="padding:.85rem;">
+        <div class="kicker">Восемь моделей</div>
+        <table class="t compact" style="margin-top:.35rem;">
+          <thead><tr><th>Семейство</th><th>Модели</th></tr></thead>
           <tbody>
-            <tr><td>scikit-learn, XGBoost, LightGBM, CatBoost</td><td>1000 расчётов и APDL-макросы</td></tr>
-            <tr><td>Optuna, SHAP</td><td>единая обвязка сравнения</td></tr>
-            <tr><td>Streamlit, Docker, GitHub Actions</td><td>физическая валидация и MVP</td></tr>
+            <tr><td>Линейная</td><td>Ridge</td></tr>
+            <tr><td>Вероятностная</td><td>GPR</td></tr>
+            <tr><td>Нейросеть</td><td>MLP</td></tr>
+            <tr><td>Деревья</td><td>Random Forest, Gradient Boosting, XGBoost, LightGBM, CatBoost</td></tr>
           </tbody>
         </table>
-        <div class="panel" style="margin-top:.65rem;padding:.6rem;border-left:3px solid var(--navy);font-size:.78rem;line-height:1.4;">Модельные библиотеки взяты готовыми осознанно. Исследовательская ценность - в данных, протоколе, физических гипотезах и воспроизводимом сравнении.</div>
+      </div>
+      <div class="panel t-navy reveal" style="padding:.85rem;">
+        <div class="kicker">Один протокол для всех</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:.45rem;">
+          <div><div class="metric" style="font-size:1.85rem;">5 × 3</div><div class="note">фолды × random seed</div></div>
+          <div><div class="metric" style="font-size:1.85rem;">4</div><div class="note">R², MAE, RMSE, MAPE</div></div>
+          <div><div class="metric" style="font-size:1.85rem;">5</div><div class="note">ансамблей настроены Optuna</div></div>
+          <div><div class="metric" style="font-size:1.85rem;">GPR</div><div class="note">ядро настраивается отдельно</div></div>
+        </div>
+        <div class="panel" style="margin-top:.75rem;padding:.65rem;border-left:3px solid var(--navy);font-size:.8rem;line-height:1.45;">Для всех моделей используются одни и те же разбиения. Ни одна модель не получает удобную тестовую выборку.</div>
       </div>
     </div>
-    <div class="panel reveal" style="margin-top:.65rem;padding:.55rem .8rem;text-align:center;font-family:var(--mono);font-size:.72rem;">docker compose up · pytest · GitHub Actions CI</div>
+    <div class="panel reveal" style="margin-top:.65rem;padding:.55rem .8rem;text-align:center;font-family:var(--mono);font-size:.72rem;">scikit-learn · XGBoost · LightGBM · CatBoost · Optuna · SHAP · docker compose · pytest · GitHub Actions</div>
   </div>
 </div>
-
 <!-- 7 -->
 <div class="slide" data-slide="7" data-criteria="Data Science">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Результаты</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Результат</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Все восемь моделей: лидер зависит от физики</h2>
+    <h2 class="section-title reveal">Результат: карта выбора модели</h2>
     <div class="rule reveal"></div>
-    <div class="figure-frame reveal" style="height:505px;padding:.25rem;">
+    <div class="figure-frame reveal" style="height:420px;padding:.25rem;">
       <img src="figs/all_models_heatmap.png" alt="Тепловая карта R-квадрат всех восьми моделей на пяти задачах">
     </div>
-    <div class="panel reveal" style="margin-top:.6rem;padding:.55rem .8rem;border-left:3px solid var(--teal);font-size:.82rem;"><b style="color:var(--teal);">GPR</b> лидирует на гладких и пороговых откликах. <b style="color:var(--brick);">CatBoost</b> выходит вперёд на расширенном диапазоне и резонансе.</div>
+    <div class="grid3 reveal" style="margin-top:.6rem;">
+      <div class="panel t-teal" style="padding:.65rem;"><div class="kicker">Гладкий отклик</div><div class="note" style="margin-top:.25rem;"><b style="color:var(--ink);">GPR</b> лидирует на Кирше, упругом изгибе и пластичности.</div></div>
+      <div class="panel t-brick" style="padding:.65rem;"><div class="kicker">Резкий отклик</div><div class="note" style="margin-top:.25rem;"><b style="color:var(--ink);">CatBoost</b> выходит вперёд на экстремальном диапазоне и резонансе.</div></div>
+      <div class="panel t-navy" style="padding:.65rem;"><div class="kicker">Практическая польза</div><div class="note" style="margin-top:.25rem;">Инженер выбирает модель по характеру отклика, а не по привычке.</div></div>
+    </div>
   </div>
 </div>
-
 <!-- 8 -->
 <div class="slide" data-slide="8" data-criteria="Продуктовое мышление · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 12 · Демо</span></div>
@@ -343,91 +332,88 @@
     <h2 class="section-title reveal">Технологическая новизна</h2>
     <div class="rule reveal"></div>
     <div class="grid3">
-      <div class="panel t-teal reveal" style="padding:.75rem;"><div class="kicker">01</div><div style="margin-top:.35rem;font-weight:700;font-size:.88rem;">Карта на реальных МКЭ-данных</div><div class="note" style="margin-top:.25rem;">1000 расчётов ANSYS в пяти режимах.</div></div>
-      <div class="panel t-teal reveal" style="padding:.75rem;"><div class="kicker">02</div><div style="margin-top:.35rem;font-weight:700;font-size:.88rem;">Честное сравнение</div><div class="note" style="margin-top:.25rem;">8 моделей, одинаковые разбиения, Optuna.</div></div>
-      <div class="panel t-brick reveal" style="padding:.75rem;"><div class="kicker">03</div><div style="margin-top:.35rem;font-weight:700;font-size:.88rem;">Граница выбора</div><div class="note" style="margin-top:.25rem;">Лидер меняется вместе с характером физического отклика.</div></div>
+      <div class="panel t-teal reveal" style="padding:.7rem;"><div class="kicker">01 · Контролируемое усложнение</div><div class="note" style="margin-top:.3rem;">Одна механическая база последовательно доведена от гладкого отклика до резонанса.</div></div>
+      <div class="panel t-teal reveal" style="padding:.7rem;"><div class="kicker">02 · Неподтвердившаяся гипотеза</div><div class="note" style="margin-top:.3rem;">Пластичности оказалось мало для смены лидера. Переход произошёл только на резком пике.</div></div>
+      <div class="panel t-brick reveal" style="padding:.7rem;"><div class="kicker">03 · Проверка механизма</div><div class="note" style="margin-top:.3rem;">Та же смена лидера повторилась на пяти функциях с контролируемой гладкостью.</div></div>
     </div>
-    <div class="kicker reveal" style="margin-top:.8rem;">Что уже можно оценивать по рассчитанным откликам</div>
-    <div class="panel reveal" style="margin-top:.35rem;padding:.35rem .8rem;">
+    <div class="kicker reveal" style="margin-top:.75rem;">Что уже можно оптимизировать на этих данных</div>
+    <div class="panel reveal" style="margin-top:.35rem;padding:.3rem .8rem;">
       <table class="t compact">
-        <thead><tr><th>Отклик</th><th>Инженерное применение</th><th>Постановка</th></tr></thead>
+        <thead><tr><th>Отклик</th><th>Инженерное применение</th></tr></thead>
         <tbody>
-          <tr><td>Максимальное напряжение</td><td>Проверка прочности и концентрации напряжений</td><td>Кирш, консоль</td></tr>
-          <tr><td>Прогиб свободного конца</td><td>Ограничение жёсткости конструкции</td><td>Консоль</td></tr>
-          <tr><td>Площадь конструкции</td><td>Минимизация материалоёмкости</td><td>Кирш, консоль</td></tr>
-          <tr><td>Пластическая деформация</td><td>Контроль необратимой деформации</td><td>Пластичность</td></tr>
-          <tr><td>Амплитуда колебаний</td><td>Поиск и обход опасного резонанса</td><td>Гармонический расчёт</td></tr>
+          <tr><td>Максимальное напряжение</td><td>Проверка прочности и концентрации напряжений</td></tr>
+          <tr><td>Прогиб свободного конца</td><td>Ограничение жёсткости конструкции</td></tr>
+          <tr><td>Площадь конструкции</td><td>Минимизация материалоёмкости</td></tr>
+          <tr><td>Пластическая деформация</td><td>Контроль необратимой деформации</td></tr>
+          <tr><td>Амплитуда колебаний</td><td>Поиск и обход опасного резонанса</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-
 <!-- 10 -->
 <div class="slide" data-slide="10" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 12 · Валидация</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 12 · Риски</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Метрик недостаточно: результаты проверены физикой</h2>
-    <div class="rule reveal"></div>
+    <h2 class="section-title reveal">Риски</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
     <div class="grid2">
-      <div class="panel t-teal reveal" style="padding:.9rem;">
-        <div class="kicker">Контрольные проверки</div>
+      <div class="panel t-teal reveal" style="padding:.85rem;">
+        <div class="kicker">Управляемые</div>
         <table class="t compact" style="margin-top:.35rem;">
-          <thead><tr><th>Проверка</th><th>Результат</th></tr></thead>
+          <thead><tr><th>Риск</th><th>Как снижается</th></tr></thead>
           <tbody>
-            <tr><td>Кирш / Инглис</td><td class="num">медиана 3,24%, максимум 6,91%</td></tr>
-            <tr><td>Прогиб балки Эйлера-Бернулли</td><td class="num">ошибка 0,81%</td></tr>
-            <tr><td>Момент появления пластичности</td><td class="num">совпадение 98,0%</td></tr>
-            <tr><td>Первая собственная частота</td><td class="num">ошибка 0,87%</td></tr>
+            <tr><td>Переобучение</td><td>5-fold × 3 seed, четыре метрики</td></tr>
+            <tr><td>Нефизичный прогноз</td><td>Проверка по формулам и контрольным расчётам</td></tr>
+            <tr><td>Экстраполяция</td><td>Фиксированный диапазон и проверка оптимума в ANSYS</td></tr>
+            <tr><td>Резонансный пик</td><td>Дополнительные точки около критической области</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="panel t-brick reveal" style="padding:.9rem;">
-        <div class="kicker">Границы применимости</div>
-        <ul class="tight">
-          <li>Суррогату нельзя доверять вне обучающего диапазона.</li>
-          <li>На резонансе R² = 0,61 описывает тренд, но не гарантирует точное значение пика.</li>
-          <li>Для резких откликов нужны дополнительные точки около критической области.</li>
-          <li>Найденный оптимум обязательно перепроверяется полным расчётом ANSYS.</li>
-        </ul>
+      <div class="panel t-brick reveal" style="padding:.85rem;">
+        <div class="kicker">Вне контроля модели</div>
+        <table class="t compact" style="margin-top:.35rem;">
+          <thead><tr><th>Риск</th><th>Последствие</th></tr></thead>
+          <tbody>
+            <tr><td>Ошибка в исходной КЭ-постановке</td><td>Суррогат повторит ошибку ANSYS</td></tr>
+            <tr><td>Новая геометрия или материал</td><td>Нужна новая расчётная выборка</td></tr>
+            <tr><td>Доступность решателя</td><td>Зависимость от лицензии и инфраструктуры</td></tr>
+            <tr><td>Нет пилота на предприятии</td><td>Продуктовый эффект пока не измерен</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="panel reveal" style="margin-top:.7rem;padding:.6rem .8rem;border-left:3px solid var(--teal);font-size:.81rem;">Суррогат ускоряет исследование пространства параметров, но инженерная ответственность и финальная проверка остаются за расчётчиком.</div>
+    <div class="panel reveal" style="margin-top:.65rem;padding:.6rem .8rem;border-left:3px solid var(--teal);font-size:.79rem;line-height:1.45;"><b style="color:var(--ink);">Физическая проверка:</b> Кирш - медианная ошибка 3,24%; прогиб балки - 0,81%; момент пластичности - совпадение 98,0%; собственная частота - ошибка 0,87%.</div>
   </div>
 </div>
-
 <!-- 11 -->
 <div class="slide" data-slide="11" data-criteria="Применение ИИ · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 12 · Применение ИИ</span></div>
   <div class="content">
     <h2 class="section-title reveal">Применение ИИ в проекте</h2>
     <div class="rule reveal"></div>
-    <div class="panel reveal" style="padding:.35rem .8rem;">
+    <div class="panel reveal" style="padding:.4rem .8rem;">
       <table class="t compact">
         <thead><tr><th style="width:18%;">Этап</th><th style="width:41%;">Ответственность автора</th><th>Что ускорял AI</th></tr></thead>
         <tbody>
-          <tr><td>Исследование</td><td>физические гипотезы, диапазоны, выбор следующих постановок</td><td>черновики Optuna/CV-обвязки и контрольных функций</td></tr>
-          <tr><td>Разработка</td><td>архитектура, приёмка кода, тестирование и интерпретация</td><td>заготовки Python, тестов и рефакторинг</td></tr>
-          <tr><td>Docker и CI</td><td>чтение логов и поиск первопричины</td><td>варианты конфигураций и команд диагностики</td></tr>
-          <tr><td>Документация</td><td>все цифры, выводы и инженерные ограничения</td><td>черновики README и HTML-презентации</td></tr>
+          <tr><td>Исследование</td><td>Физические гипотезы, диапазоны и выбор постановок</td><td>Черновики Optuna/CV-обвязки и контрольных функций</td></tr>
+          <tr><td>Разработка</td><td>Архитектура, приёмка кода, тестирование</td><td>Заготовки Python, тестов и рефакторинг</td></tr>
+          <tr><td>Отладка</td><td>Чтение логов и поиск первопричины</td><td>Варианты диагностики и конфигураций</td></tr>
+          <tr><td>Документация</td><td>Все цифры, выводы и ограничения</td><td>Черновики README и HTML-презентации</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="grid2" style="margin-top:.65rem;">
-      <div class="panel t-brick reveal" style="padding:.7rem;"><div class="kicker">Пример 1 · CI</div><div class="note" style="margin-top:.3rem;">Типовая гипотеза про линтер была неверной. По времени падения тестов найден импорт, исправлены pytest.ini и запуск через python -m pytest.</div></div>
-      <div class="panel t-navy reveal" style="padding:.7rem;"><div class="kicker">Пример 2 · Docker</div><div class="note" style="margin-top:.3rem;">Совет очистить кэш не помог. По размеру контекста найдены тяжёлые ANSYS-артефакты, добавлен .dockerignore.</div></div>
-    </div>
-    <div class="panel reveal" style="margin-top:.65rem;padding:.55rem .8rem;text-align:center;font-family:var(--mono);font-size:.71rem;">Все числа получены из ANSYS и cross-validation · docker compose up · pytest · GitHub Actions CI</div>
+    <div class="panel t-teal reveal" style="margin-top:.75rem;padding:.8rem;border-left:3px solid var(--teal);font-size:.88rem;line-height:1.5;"><b style="color:var(--ink);">Итог:</b> автор отвечает за гипотезы, физику, приёмку и выводы. AI ускоряет рутинную работу между постановкой задачи и финальной проверкой.</div>
+    <div class="panel reveal" style="margin-top:.6rem;padding:.55rem .8rem;text-align:center;font-family:var(--mono);font-size:.72rem;">Воспроизводимость: docker compose up · pytest · GitHub Actions CI</div>
   </div>
 </div>
-
 <!-- 12 -->
 <div class="slide" data-slide="12" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Материалы</span></div>
   <div class="content" style="text-align:center;">
     <h2 class="big-title reveal" style="font-size:clamp(1.9rem,4vw,3.2rem);">Материалы проекта</h2>
     <div class="rule reveal" style="margin:.6rem auto .8rem;"></div>
-    <p class="reveal" style="max-width:62ch;margin:0 auto .75rem;font-size:.9rem;">Репозиторий с кодом, данными, README и запуском одной командой. Рядом - резервная ссылка на демо.</p>
+    <p class="reveal" style="max-width:62ch;margin:0 auto .75rem;font-size:.9rem;">Репозиторий с кодом, данными и README. Рядом появится резервная ссылка на демо.</p>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;max-width:760px;margin:0 auto;">
       <div class="panel qr reveal" style="padding:.7rem;">
         <div class="kicker">README · GitHub</div>
@@ -440,7 +426,10 @@
         <div style="height:180px;margin-top:.45rem;display:grid;place-items:center;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:.82rem;line-height:1.45;">QR появится<br>после записи демо</div>
       </div>
     </div>
-    <div class="panel reveal" style="margin:.65rem auto 0;max-width:900px;padding:.6rem .8rem;border-left:3px solid var(--teal);text-align:left;font-size:.79rem;line-height:1.45;"><b style="color:var(--ink);">Ранняя проверка:</b> проект обсуждён с руководителем ВКР и инженером-расчётчиком кафедры. <b style="color:var(--ink);">Дальше:</b> тест MVP на 3-5 расчётчиках, переход от скалярного отклика к полю и перенос на отечественные решатели.</div>
+    <div class="panel reveal" style="margin:.65rem auto 0;max-width:900px;padding:.65rem .8rem;border-left:3px solid var(--teal);text-align:left;font-size:.79rem;line-height:1.45;">
+      <div><b style="color:var(--ink);">Ранняя проверка:</b> проект обсуждён с руководителем ВКР и инженером-расчётчиком кафедры.</div>
+      <div style="margin-top:.45rem;"><b style="color:var(--ink);">Дальше:</b> тест MVP на 3-5 расчётчиках, переход от скалярного отклика к полю и перенос на отечественные решатели.</div>
+    </div>
   </div>
 </div>
 
