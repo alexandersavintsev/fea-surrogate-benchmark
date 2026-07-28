@@ -109,6 +109,12 @@
   .timeline .panel{padding:.85rem;}
   .timeline .metric{font-size:1.8rem;color:var(--line);}
   .qr-small img{width:150px;height:150px;}
+  .slide[data-criteria]::after{
+    content:'КРИТЕРИИ JMLC · ' attr(data-criteria);
+    position:absolute;left:clamp(1rem,2.4vw,2.4rem);bottom:20px;z-index:90;
+    font-family:var(--mono);font-size:.58rem;line-height:1;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap;
+  }
   @media print{
     @page{size:13.333in 7.5in;margin:0}
     html,body{overflow:visible;background:#fff}
@@ -123,7 +129,7 @@
 <div class="deck">
 
 <!-- 1 -->
-<div class="slide active" data-slide="1">
+<div class="slide active" data-slide="1" data-criteria="Data Science · Разработка и инженерия">
   <div class="glow" style="width:420px;height:420px;top:0;right:0;background:var(--teal);opacity:.10"></div>
   <div class="glow" style="width:280px;height:280px;bottom:0;left:0;background:var(--brick);opacity:.07"></div>
   <div class="content">
@@ -152,7 +158,7 @@
 </div>
 
 <!-- 2 -->
-<div class="slide" data-slide="2">
+<div class="slide" data-slide="2" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 13 · Проблема и ЦА</span></div>
   <div class="content">
     <h2 class="section-title reveal">Инженеру нужен быстрый перебор, но доверяет он полному расчёту</h2>
@@ -184,7 +190,7 @@
 </div>
 
 <!-- 3 -->
-<div class="slide" data-slide="3">
+<div class="slide" data-slide="3" data-criteria="Продуктовое мышление · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 13 · Решение и импакт</span></div>
   <div class="content">
     <h2 class="section-title reveal">ANSYS создаёт обучающую выборку, ML ускоряет повторные оценки</h2>
@@ -205,7 +211,7 @@
 </div>
 
 <!-- 4 -->
-<div class="slide" data-slide="4">
+<div class="slide" data-slide="4" data-criteria="Data Science">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 13 · Задачи механики</span></div>
   <div class="content">
     <h2 class="section-title reveal">Две геометрии проверяются в пяти физических режимах</h2>
@@ -235,7 +241,7 @@
 </div>
 
 <!-- 5 -->
-<div class="slide" data-slide="5">
+<div class="slide" data-slide="5" data-criteria="Data Science · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 13 · Данные</span></div>
   <div class="content">
     <h2 class="section-title reveal">1000 собственных расчётов - пять отдельных наборов данных</h2>
@@ -270,7 +276,7 @@
 </div>
 
 <!-- 6 -->
-<div class="slide" data-slide="6">
+<div class="slide" data-slide="6" data-criteria="Data Science · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 13 · Модели и эксперимент</span></div>
   <div class="content">
     <h2 class="section-title reveal">Восемь готовых алгоритмов сравниваются по одному протоколу</h2>
@@ -298,7 +304,7 @@
 </div>
 
 <!-- 7 -->
-<div class="slide" data-slide="7">
+<div class="slide" data-slide="7" data-criteria="Data Science">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 13 · Результат</span></div>
   <div class="content">
     <h2 class="section-title reveal">GPR лидирует на гладких откликах, CatBoost - на экстремуме и резонансе</h2>
@@ -326,7 +332,7 @@
 </div>
 
 <!-- 8 -->
-<div class="slide" data-slide="8">
+<div class="slide" data-slide="8" data-criteria="Data Science">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 13 · Оригинальность</span></div>
   <div class="content">
     <h2 class="section-title reveal">Главный результат вырос из гипотезы, которая не подтвердилась</h2>
@@ -355,7 +361,7 @@
 </div>
 
 <!-- 9 -->
-<div class="slide" data-slide="9">
+<div class="slide" data-slide="9" data-criteria="Data Science · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 13 · Валидация</span></div>
   <div class="content">
     <h2 class="section-title reveal">Высокого R² недостаточно - результат проверяется физикой</h2>
@@ -381,7 +387,7 @@
 </div>
 
 <!-- 10 -->
-<div class="slide" data-slide="10">
+<div class="slide" data-slide="10" data-criteria="Продуктовое мышление · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 13 · MVP и демо</span></div>
   <div class="content">
     <h2 class="section-title reveal">MVP превращает исследование в проверяемый инструмент</h2>
@@ -405,7 +411,7 @@
 </div>
 
 <!-- 11 -->
-<div class="slide" data-slide="11">
+<div class="slide" data-slide="11" data-criteria="Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 13 · Инженерия</span></div>
   <div class="content">
     <h2 class="section-title reveal">Воспроизводимость закрывает весь путь от APDL до интерфейса</h2>
@@ -427,7 +433,7 @@
 </div>
 
 <!-- 12 -->
-<div class="slide" data-slide="12">
+<div class="slide" data-slide="12" data-criteria="Применение ИИ">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 13 · Применение ИИ</span></div>
   <div class="content">
     <h2 class="section-title reveal">Кодовые LLM-агенты ускоряли разработку, но не заменяли инженерную проверку</h2>
@@ -458,7 +464,7 @@
 </div>
 
 <!-- 13 -->
-<div class="slide" data-slide="13">
+<div class="slide" data-slide="13" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>13 / 13 · Материалы и развитие</span></div>
   <div class="glow" style="width:420px;height:420px;top:0;right:0;background:var(--teal);opacity:.09"></div>
   <div class="content" style="text-align:center;">
