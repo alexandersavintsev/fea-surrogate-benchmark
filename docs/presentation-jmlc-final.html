@@ -1,534 +1,514 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Суррогатные ML-модели для инженерных расчётов - Александр Савинцев</title>
-  <style>
-    :root{
-      --paper:#f7f6f1;
-      --white:#ffffff;
-      --ink:#171b1d;
-      --muted:#687074;
-      --navy:#173654;
-      --teal:#087f79;
-      --teal-soft:#dcefeb;
-      --orange:#c94a18;
-      --orange-soft:#f7e4d8;
-      --line:#d9d5ca;
-      --shadow:0 16px 44px rgba(23,27,29,.09);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111;font-family:Inter,Manrope,"Segoe UI",Arial,sans-serif;color:var(--ink)}
-    body{counter-reset:slide}
-    a{color:inherit}
-    .slide{
-      position:absolute;inset:0;display:none;width:100vw;height:100vh;
-      background:
-        linear-gradient(rgba(23,54,84,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(23,54,84,.035) 1px,transparent 1px),
-        var(--paper);
-      background-size:44px 44px;
-      padding:4.6vh 4.2vw 8.5vh;
-      overflow:hidden;
-    }
-    .slide.active{display:block}
-    .slide::before{
-      content:"";position:absolute;left:0;top:0;bottom:0;width:9px;background:var(--teal)
-    }
-    .slide.orange::before{background:var(--orange)}
-    .slide.navy::before{background:var(--navy)}
-    .slide.dark{
-      color:#f5f7f8;
-      background:
-        radial-gradient(circle at 84% 14%,rgba(8,127,121,.40),transparent 30%),
-        radial-gradient(circle at 12% 84%,rgba(201,74,24,.22),transparent 32%),
-        #10283c;
-    }
-    .slide.dark::before{display:none}
-    .eyebrow{
-      display:flex;align-items:center;gap:.65rem;
-      color:var(--teal);font-size:clamp(.76rem,1.15vw,1rem);
-      font-weight:800;letter-spacing:.17em;text-transform:uppercase;
-      margin-bottom:1.2vh;
-    }
-    .eyebrow::before{content:"";width:48px;height:4px;background:currentColor;border-radius:5px}
-    h1,h2,h3,p{margin:0}
-    h1{font-size:clamp(3.15rem,6.3vw,6.2rem);line-height:.96;letter-spacing:-.055em;max-width:1050px}
-    h2{font-size:clamp(2.15rem,4vw,4rem);line-height:1.03;letter-spacing:-.045em;max-width:1200px}
-    h3{font-size:clamp(1.1rem,1.8vw,1.65rem);line-height:1.1}
-    p,li{font-size:clamp(.92rem,1.45vw,1.28rem);line-height:1.45}
-    .lead{font-size:clamp(1.18rem,2vw,1.75rem);line-height:1.38;color:var(--muted)}
-    .dark .lead{color:#d2e0e6}
-    .mono{font-family:"Cascadia Code","JetBrains Mono",Consolas,monospace}
-    .accent{color:var(--teal)}
-    .danger{color:var(--orange)}
-    .muted{color:var(--muted)}
-    .content{height:61.5vh!important;margin-top:3.2vh}
-    .slide[data-slide="10"] .content{height:56vh!important}
-    .slide[data-slide="12"] .content{height:auto!important}
-    .cols{display:grid;grid-template-columns:1fr 1fr;gap:2.3vw;height:100%}
-    .cols-43{grid-template-columns:.8fr 1.2fr}
-    .cols-34{grid-template-columns:.72fr 1.28fr}
-    .panel{
-      background:rgba(255,255,255,.94);border:1px solid var(--line);
-      border-radius:18px;box-shadow:var(--shadow);padding:2.2vh 1.75vw;
-    }
-    .flat{background:transparent;border:0;box-shadow:none;padding:0}
-    .rule{height:5px;width:78px;background:linear-gradient(90deg,var(--teal),var(--orange));margin:2.3vh 0}
-    .stat-row{display:flex;gap:1.15vw;align-items:stretch;margin-top:3vh}
-    .stat{min-width:160px;padding:1.45vh 1.15vw;border-top:4px solid var(--teal);background:rgba(255,255,255,.10)}
-    .stat b{display:block;font-size:clamp(1.65rem,3vw,2.8rem);line-height:1}
-    .stat span{display:block;margin-top:.5rem;color:inherit;opacity:.72;font-size:clamp(.78rem,1.05vw,.98rem)}
-    .kicker{font-size:clamp(.78rem,1.1vw,1rem);font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
-    .big-number{font-size:clamp(2.4rem,5.2vw,5.2rem);font-weight:900;letter-spacing:-.06em;line-height:.9}
-    .list{margin:1.5vh 0 0;padding-left:1.25em}
-    .list li{margin:.72vh 0}
-    .compare{width:100%;border-collapse:collapse;margin-top:1.4vh}
-    .compare th,.compare td{padding:1.05vh .8vw;border-bottom:1px solid var(--line);text-align:left;font-size:clamp(.76rem,1.12vw,1rem)}
-    .compare th{color:var(--muted);font-weight:700}
-    .compare td:first-child{font-weight:800}
-    .compare tr:last-child td{border-bottom:0}
-    .callout{border-left:5px solid var(--teal);padding:1.4vh 1.2vw;background:var(--white);border-radius:0 12px 12px 0}
-    .callout.orange{border-left-color:var(--orange)}
-    .figure{width:100%;height:100%;object-fit:contain;display:block}
-    .figure-frame{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);padding:1.25vh 1vw}
-    .caption{font-size:clamp(.72rem,1.05vw,.95rem);line-height:1.35;color:var(--muted);margin-top:.65vh}
-    .mechanics{display:grid;grid-template-columns:1fr 1fr;gap:2.1vw;height:100%}
-    .mechanic{display:grid;grid-template-rows:auto 1fr 1fr auto;gap:1vh;min-height:0}
-    .mechanic .imagebox{min-height:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;padding:.6vh .5vw}
-    .mechanic .imagebox img{width:100%;height:100%;object-fit:contain}
-    .plot-pair{display:grid;grid-template-columns:1fr 1fr;gap:2vw;height:100%}
-    .plot-card{display:grid;grid-template-rows:auto 1fr auto;gap:1.2vh;min-height:0}
-    .plot-card .plot{min-height:0;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;padding:1vh 1vw}
-    .plot-card .plot img{width:100%;height:100%;object-fit:contain}
-    .segments{display:flex;height:19vh;border-radius:16px;overflow:hidden;margin:2.3vh 0 2vh;box-shadow:var(--shadow)}
-    .segment{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:.6rem}
-    .segment b{font-size:clamp(1.4rem,2.5vw,2.4rem)}
-    .segment span{font-size:clamp(.7rem,1vw,.92rem);line-height:1.25}
-    .seg1{flex:160;background:#205d77}.seg2{flex:320;background:#087f79}.seg3{flex:120;background:#677f59}.seg4{flex:200;background:#b38b42}.seg5{flex:200;background:#c94a18}
-    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3vw;margin-top:2.2vh}
-    .step{position:relative;padding:1.55vh 1vw;background:#fff;border:1px solid var(--line);border-radius:14px}
-    .step:not(:last-child)::after{content:"→";position:absolute;right:-1.05vw;top:50%;transform:translateY(-50%);font-size:1.5rem;color:var(--teal);font-weight:900}
-    .step b{display:block;font-size:clamp(.92rem,1.3vw,1.17rem)}
-    .step span{display:block;margin-top:.45rem;color:var(--muted);font-size:clamp(.7rem,1vw,.9rem);line-height:1.3}
-    .model-map{display:grid;grid-template-columns:1fr 1fr;gap:1.15vw 1.3vh;margin-top:1.5vh}
-    .model-group{border-left:5px solid var(--teal);padding:1.25vh 1vw;background:#fff;border-radius:0 12px 12px 0}
-    .model-group.orange{border-left-color:var(--orange)}
-    .model-group b{display:block;font-size:clamp(.92rem,1.3vw,1.16rem)}
-    .model-group span{display:block;color:var(--muted);margin-top:.35rem;font-size:clamp(.76rem,1.05vw,.96rem)}
-    .protocol{display:grid;grid-template-rows:repeat(4,1fr);gap:1.2vh;height:100%}
-    .protocol-row{display:grid;grid-template-columns:84px 1fr;gap:1vw;align-items:center;border-bottom:1px solid var(--line)}
-    .protocol-row:last-child{border-bottom:0}
-    .protocol-row .n{font-size:clamp(1.6rem,3vw,2.8rem);font-weight:900;color:var(--teal)}
-    .protocol-row b{display:block;font-size:clamp(.98rem,1.35vw,1.2rem)}
-    .protocol-row span{font-size:clamp(.75rem,1.03vw,.93rem);color:var(--muted)}
-    .story{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8vw;margin-top:3vh}
-    .story-item{padding-top:1.5vh;border-top:6px solid var(--teal)}
-    .story-item:nth-child(2){border-color:#b38b42}.story-item:nth-child(3){border-color:var(--orange)}
-    .story-item .idx{font-size:clamp(2rem,4vw,4rem);font-weight:900;line-height:1;color:var(--line)}
-    .story-item h3{margin:.8vh 0}
-    .story-item p{color:var(--muted)}
-    .validation{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw 1.8vh;margin-top:2vh}
-    .check{background:#fff;border:1px solid var(--line);border-radius:15px;padding:1.45vh 1.2vw;display:grid;grid-template-columns:auto 1fr;gap:1vw;align-items:center}
-    .checkmark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--teal-soft);color:var(--teal);font-size:1.4rem;font-weight:900}
-    .check b{display:block;font-size:clamp(.9rem,1.3vw,1.15rem)}
-    .check span{display:block;color:var(--muted);font-size:clamp(.74rem,1.02vw,.92rem);margin-top:.25rem}
-    .screen{min-height:0;background:#fff;border:1px solid var(--line);border-radius:17px;padding:1vh;box-shadow:var(--shadow);overflow:hidden}
-    .screen img{width:100%;height:100%;object-fit:cover;object-position:top left}
-    .human-ai{display:grid;grid-template-columns:1fr 1fr;gap:2vw;height:100%}
-    .human-ai h3{margin-bottom:1.5vh}
-    .human-ai .lane{padding:2vh 1.4vw;border-top:7px solid var(--teal);background:#fff;border-radius:13px;box-shadow:var(--shadow)}
-    .human-ai .lane:last-child{border-top-color:var(--orange)}
-    .human-ai li{font-size:clamp(.8rem,1.17vw,1.04rem);margin:.75vh 0}
-    .qr-row{display:flex;gap:2.2vw;align-items:center;margin-top:2.2vh}
-    .qr{display:grid;grid-template-columns:130px 1fr;gap:1.1vw;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.1vh 1vw;min-width:360px}
-    .qr img{width:130px;height:130px}
-    .qr b{display:block;font-size:clamp(.9rem,1.25vw,1.12rem)}
-    .qr span{display:block;color:var(--muted);font-size:clamp(.7rem,.95vw,.86rem);margin-top:.35rem;overflow-wrap:anywhere}
-    .footer{
-      position:absolute;left:4.2vw;right:4.2vw;bottom:2.2vh;
-      display:flex;align-items:center;justify-content:space-between;
-      color:var(--muted);font-size:clamp(.68rem,.9vw,.82rem)
-    }
-    .dark .footer{color:#b9cbd4}
-    .timer{font-family:"Cascadia Code",Consolas,monospace;font-weight:800}
-    .nav{
-      position:fixed;z-index:50;left:50%;bottom:1.6vh;transform:translateX(-50%);
-      display:flex;align-items:center;gap:.8rem;padding:.45rem .8rem;
-      background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:999px;box-shadow:0 8px 28px rgba(0,0,0,.16)
-    }
-    .nav button{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:1.15rem;cursor:pointer}
-    .dots{display:flex;gap:5px}.dot{width:7px;height:7px;border-radius:50%;background:#d3d0c7}.dot.active{background:var(--teal);transform:scale(1.3)}
-    .counter{font-size:.78rem;color:var(--muted);min-width:44px;text-align:center}
-    .reveal{opacity:0;transform:translateY(10px);transition:opacity .36s ease,transform .36s ease}
-    .active .reveal{opacity:1;transform:none}
-    .active .reveal:nth-child(2){transition-delay:.05s}.active .reveal:nth-child(3){transition-delay:.10s}.active .reveal:nth-child(4){transition-delay:.15s}
-    @media(max-width:900px){
-      .slide{padding:3.5vh 3.5vw 9vh}.cols,.cols-43,.cols-34{gap:1.5vw}
-      .nav{bottom:1vh}.qr{min-width:0}.qr img{width:100px;height:100px}.qr{grid-template-columns:100px 1fr}
-    }
-    @media print{
-      @page{size:13.333in 7.5in;margin:0}
-      html,body{overflow:visible;background:#fff}
-      .slide{display:block!important;position:relative;width:13.333in;height:7.5in;page-break-after:always;padding:.34in .48in .62in}
-      .slide:last-of-type{page-break-after:auto}.nav{display:none}.reveal{opacity:1!important;transform:none!important}
-      .footer{left:.48in;right:.48in;bottom:.16in}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Суррогаты для МКЭ - JMLC - Савинцев Александр</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --paper:#f7f6f2; --panel:#ffffff; --ink:#1a1a18; --body:#3f4a52;
+    --line:#e3ded4; --muted:#797469;
+    --teal:#0f766e; --brick:#c2410c; --navy:#1e3a5f;
+    --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Manrope',system-ui,sans-serif;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--paper); }
+  body{ font-family:var(--sans); color:var(--ink); overflow:hidden; height:100vh; width:100vw; }
+  .deck{ width:100vw; height:100vh; position:relative; }
+  .slide{ position:absolute; inset:0; background:var(--paper); display:flex; flex-direction:column; align-items:center; justify-content:center;
+          opacity:0; transform:translateY(10px); transition:opacity .45s ease, transform .45s ease; pointer-events:none; overflow:hidden; }
+  .slide.active{ opacity:1; transform:translateY(0); pointer-events:all; }
+  /* техническая сетка вместо размытых пятен */
+  .slide::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:linear-gradient(rgba(26,26,24,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,24,.045) 1px, transparent 1px);
+    background-size:34px 34px; mask-image:radial-gradient(ellipse at center, #000 35%, transparent 88%); }
+  .glow{ position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
+  .slide > .content{ position:relative; z-index:2; width:100%; max-width:1200px; padding:clamp(1rem,2.4vw,2.4rem); }
+  /* верхний колонтитул как штамп чертежа */
+  .shead{ position:absolute; top:0; left:0; right:0; z-index:3; display:flex; justify-content:space-between; align-items:center;
+          padding:.7rem clamp(1rem,2.4vw,2.4rem); border-bottom:1px solid var(--line); background:rgba(247,246,242,.9);
+          font-family:var(--mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .shead b{ color:var(--ink); font-weight:700; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:10px; }
+  .panel.t-teal{ border-top:3px solid var(--teal); }
+  .panel.t-brick{ border-top:3px solid var(--brick); }
+  .panel.t-navy{ border-top:3px solid var(--navy); }
+  .grid2{ display:grid; grid-template-columns:1.05fr .95fr; gap:1rem; align-items:stretch; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; }
+  .kicker{ font-family:var(--mono); text-transform:uppercase; letter-spacing:.14em; font-size:.68rem; color:var(--muted); font-weight:500; }
+  .metric{ font-family:var(--mono); font-size:clamp(1.7rem,3.2vw,2.7rem); font-weight:700; line-height:1; color:var(--ink); letter-spacing:-.02em; }
+  .big-title{ font-family:var(--sans); font-weight:800; font-size:clamp(2.3rem,5.2vw,4.4rem); line-height:1; letter-spacing:-.035em; color:var(--ink); }
+  .section-title{ font-family:var(--sans); font-weight:800; font-size:clamp(1.5rem,2.6vw,2.3rem); line-height:1.05; letter-spacing:-.02em; color:var(--ink); }
+  .rule{ width:56px; height:4px; background:var(--teal); border-radius:2px; margin:.55rem 0 .9rem; }
+  .tag{ display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .6rem; border-radius:4px; background:#fff;
+        border:1px solid var(--line); color:var(--body); font-family:var(--mono); font-size:.74rem; }
+  p,li,td{ color:var(--body); }
+  table.t{ width:100%; border-collapse:collapse; font-size:.86rem; }
+  table.t th,table.t td{ padding:.45rem .55rem; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+  table.t th{ font-family:var(--mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:500; }
+  table.t td.num{ font-family:var(--mono); }
+  table.t.compact th,table.t.compact td{ padding:.3rem .5rem; font-size:.79rem; }
+  .w-gpr{ color:var(--teal); font-weight:700; font-family:var(--mono); }
+  .w-boost{ color:var(--brick); font-weight:700; font-family:var(--mono); }
+  .note{ font-size:.79rem; color:var(--muted); line-height:1.5; }
+  .src{ font-size:.7rem; color:var(--muted); line-height:1.45; font-family:var(--mono); }
+  .src a{ color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(15,118,110,.3); }
+  ul.tight{ margin:.45rem 0 0; padding-left:1rem; line-height:1.5; font-size:.85rem; }
+  ul.tight li{ margin-bottom:.4rem; }
+  .reveal{ opacity:0; transform:translateY(12px); }
+  /* навигация */
+  .nav{ position:fixed; bottom:18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:10px; z-index:100;
+        background:#fff; padding:6px 12px; border-radius:8px; border:1px solid var(--line); box-shadow:0 2px 10px rgba(26,26,24,.07); }
+  .nav-btn{ width:30px; height:30px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:6px; font-size:1rem; cursor:pointer; line-height:1; }
+  .nav-btn:hover{ background:var(--paper); }
+  .dots{ display:flex; gap:5px; }
+  .dot{ width:6px; height:6px; border-radius:1px; background:var(--line); cursor:pointer; transition:.2s; }
+  .dot.active{ background:var(--teal); transform:scaleY(2.2); }
+  .counter{ font-family:var(--mono); font-size:.72rem; color:var(--muted); min-width:46px; text-align:center; }
+  .timer{ display:flex; align-items:center; gap:.4rem; padding:.28rem .55rem; border-radius:6px; background:var(--paper);
+          border:1px solid var(--line); font-family:var(--mono); font-weight:700; font-size:.8rem; color:var(--ink); }
+  .tdot{ width:7px; height:7px; border-radius:50%; background:var(--teal); }
+  .timer.warn{ border-color:#d97706; } .timer.warn .tdot{ background:#d97706; }
+  .timer.danger{ border-color:var(--brick); } .timer.danger .tdot{ background:var(--brick); }
+  .qr img{ width:180px; height:180px; background:#fff; padding:.4rem; border:1px solid var(--line); border-radius:6px; }
+  code{ font-family:var(--mono); background:rgba(15,118,110,.08); padding:.1rem .35rem; border-radius:4px; color:var(--teal); font-size:.85em; }
+  @media (max-width:920px){ .grid2,.grid3,.grid4{ grid-template-columns:1fr; } }
+
+
+  .figure-frame{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.55rem;overflow:hidden;}
+  .figure-frame img{display:block;width:100%;height:100%;object-fit:contain;}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;min-height:0;}
+  .pair > *{min-height:0;}
+  .slide{overflow:clip;}
+  .quad{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,minmax(0,1fr));gap:.45rem;height:285px;min-height:0;overflow:hidden;}
+  .quad img{width:100%;height:100%;min-width:0;min-height:0;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:7px;padding:.25rem;}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;align-items:stretch;}
+  .flow .panel{position:relative;padding:.8rem;}
+  .flow .panel:not(:last-child)::after{content:'›';position:absolute;right:-.5rem;top:50%;transform:translateY(-50%);font-size:1.5rem;color:var(--teal);font-weight:700;z-index:2;}
+  .small{font-size:.78rem;line-height:1.45;color:var(--body);}
+  .tiny{font-size:.68rem;line-height:1.4;color:var(--muted);}
+  .bar{display:flex;height:58px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;}
+  .bar > div{display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff;font-family:var(--mono);font-size:.62rem;line-height:1.25;text-align:center;}
+  .bar b{font-size:.82rem;}
+  .b1{flex:160;background:#1e3a5f}.b2{flex:320;background:#0f766e}.b3{flex:120;background:#64785c}.b4{flex:200;background:#a98337}.b5{flex:200;background:#c2410c}
+  .model-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;}
+  .model-grid .panel{padding:.72rem .8rem;}
+  .checks{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;}
+  .check{display:grid;grid-template-columns:34px 1fr;gap:.6rem;align-items:center;padding:.65rem .75rem;background:#fff;border:1px solid var(--line);border-radius:8px;}
+  .check .ok{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:rgba(15,118,110,.10);color:var(--teal);font-weight:800;}
+  .screen{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.45rem;overflow:hidden;}
+  .screen img{width:100%;height:100%;object-fit:cover;object-position:top left;display:block;}
+  .lane{padding:.9rem 1rem;background:#fff;border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:10px;}
+  .lane.brick{border-top-color:var(--brick);}
+  .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;}
+  .timeline .panel{padding:.85rem;}
+  .timeline .metric{font-size:1.8rem;color:var(--line);}
+  .qr-small img{width:150px;height:150px;}
+  @media print{
+    @page{size:13.333in 7.5in;margin:0}
+    html,body{overflow:visible;background:#fff}
+    .slide{display:flex!important;position:relative;width:13.333in;height:7.5in;page-break-after:always;opacity:1!important;transform:none!important}
+    .slide:last-of-type{page-break-after:auto}
+    .nav{display:none!important}.reveal{opacity:1!important;transform:none!important}
+  }
+
+</style>
 </head>
 <body>
+<div class="deck">
 
-  <section class="slide dark active" data-slide="1">
-    <div style="height:100%;display:flex;flex-direction:column;justify-content:center;max-width:1120px">
-      <div class="eyebrow reveal" style="color:#72d4c9">Junior ML Contest · 2026</div>
-      <h1 class="reveal">Суррогатные ML-модели для инженерных расчётов</h1>
-      <div class="rule reveal"></div>
-      <p class="lead reveal" style="max-width:900px">Как выбрать модель по характеру физического отклика и сократить число дорогих расчётов ANSYS</p>
-      <div class="stat-row reveal">
-        <div class="stat"><b>1000</b><span>собственных расчётов ANSYS</span></div>
-        <div class="stat"><b>8</b><span>регрессионных моделей</span></div>
-        <div class="stat"><b>5</b><span>физических постановок</span></div>
-      </div>
-      <p style="margin-top:4vh;font-size:clamp(.9rem,1.35vw,1.18rem)">Александр Савинцев · прикладная механика, СПбПУ</p>
-    </div>
-    <div class="footer"><span>FEA Surrogate Benchmark</span><span>01 / 12</span></div>
-  </section>
-
-  <section class="slide" data-slide="2">
-    <div class="eyebrow reveal">Проблема и ЦА</div>
-    <h2 class="reveal">ANSYS нужен для проверки, но слишком дорог для перебора вариантов</h2>
-    <div class="content cols cols-43">
-      <div class="figure-frame reveal">
-        <img class="figure" src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени расчёта ANSYS и прогноза GPR">
-      </div>
-      <div class="reveal" style="display:flex;flex-direction:column;gap:1.6vh">
-        <div class="callout">
-          <span class="kicker">Целевая аудитория</span>
-          <p style="margin-top:.65vh"><b>Инженер-расчётчик</b>, которому нужно быстро проверить сотни вариантов геометрии и нагрузки.</p>
+<!-- 1 -->
+<div class="slide active" data-slide="1">
+  <div class="glow" style="width:420px;height:420px;top:0;right:0;background:var(--teal);opacity:.10"></div>
+  <div class="glow" style="width:280px;height:280px;bottom:0;left:0;background:var(--brick);opacity:.07"></div>
+  <div class="content">
+    <div class="grid2">
+      <div>
+        <div class="kicker reveal">Инженерные расчёты · Суррогатное ML-моделирование</div>
+        <h1 class="big-title reveal" style="margin:.7rem 0 0;">Суррогаты<br>для МКЭ</h1>
+        <div class="rule reveal"></div>
+        <p class="reveal" style="max-width:55ch;font-size:1.04rem;line-height:1.55;margin:0;">Как выбирать ML-модель для ускорения параметрических расчётов ANSYS, не теряя физический смысл результата.</p>
+        <div class="reveal" style="display:flex;gap:.9rem;margin-top:1.2rem;flex-wrap:wrap;font-family:var(--mono);font-size:.76rem;color:var(--muted);">
+          <span>САВИНЦЕВ АЛЕКСАНДР</span><span>JUNIOR ML CONTEST · 2026</span>
         </div>
-        <table class="compare panel" style="box-shadow:none">
-          <thead><tr><th>Подход</th><th>Плюс</th><th>Ограничение</th></tr></thead>
+      </div>
+      <div class="panel t-teal reveal" style="align-self:center;padding:1.3rem;">
+        <div class="kicker">Проект в цифрах</div>
+        <div class="grid3" style="margin-top:.85rem;">
+          <div><div class="metric">1000</div><div class="note" style="margin-top:.2rem;">расчётов ANSYS</div></div>
+          <div><div class="metric">8</div><div class="note" style="margin-top:.2rem;">ML-моделей</div></div>
+          <div><div class="metric">5</div><div class="note" style="margin-top:.2rem;">режимов отклика</div></div>
+        </div>
+        <div style="height:1px;background:var(--line);margin:1rem 0;"></div>
+        <div style="font-size:.9rem;line-height:1.55;">Главный результат - воспроизводимая карта: где брать GPR, а где преимущество переходит к бустингу.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="slide" data-slide="2">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 13 · Проблема и ЦА</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Инженеру нужен быстрый перебор, но доверяет он полному расчёту</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
+    <div class="grid2">
+      <div class="panel t-brick reveal" style="padding:1.05rem;">
+        <div class="kicker">Целевой пользователь</div>
+        <p style="font-size:.94rem;line-height:1.55;margin:.45rem 0 0;">Инженер-расчётчик, который подбирает геометрию, материал и нагрузку. Для исследования области параметров ему нужны сотни запусков ANSYS.</p>
+        <div class="figure-frame" style="height:180px;margin-top:.8rem;">
+          <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени ANSYS и GPR">
+        </div>
+        <p class="tiny" style="margin:.35rem 0 0;">Измерение в проекте: 12,9 с на один расчёт против 0,00486 с на прогноз GPR.</p>
+      </div>
+      <div class="panel t-navy reveal" style="padding:1.05rem;">
+        <div class="kicker">Не компании, а четыре подхода к задаче</div>
+        <table class="t compact" style="margin-top:.45rem;">
+          <thead><tr><th>Подход</th><th>Скорость</th><th>Ограничение</th></tr></thead>
           <tbody>
-            <tr><td>Формула</td><td>мгновенно</td><td>только простая постановка</td></tr>
-            <tr><td>ANSYS</td><td>полная физика</td><td>дорого для массового перебора</td></tr>
-            <tr><td>ML-суррогат</td><td>миллисекунды</td><td>работает внутри проверенной области</td></tr>
+            <tr><td>Формула</td><td class="num">мгновенно</td><td>простая геометрия и физика</td></tr>
+            <tr><td>Полный МКЭ</td><td class="num">секунды / минуты</td><td>дорогой массовый перебор</td></tr>
+            <tr><td>Один суррогат</td><td class="num">миллисекунды</td><td>неясно, какую модель выбрать</td></tr>
+            <tr><td><b>Этот проект</b></td><td class="num"><b>миллисекунды</b></td><td><b>выбор по типу отклика + проверка</b></td></tr>
           </tbody>
         </table>
-        <div class="callout orange">
-          <p><b>Продуктовая гипотеза:</b> суррогат отсеивает варианты, а финальные решения обязательно перепроверяются полным расчётом.</p>
-        </div>
+        <div class="panel" style="margin-top:.7rem;padding:.65rem;border-left:3px solid var(--brick);font-size:.82rem;line-height:1.45;">Проблема проекта - не просто ускорить один расчёт, а понять границу применимости разных ML-моделей.</div>
       </div>
     </div>
-    <div class="footer"><span>Проблема · ЦА · альтернативы · гипотеза</span><span>02 / 12</span></div>
-  </section>
-
-  <section class="slide navy" data-slide="3">
-    <div class="eyebrow reveal">Что именно рассчитывается</div>
-    <h2 class="reveal">Две геометрии дают четыре режима физического отклика</h2>
-    <div class="content mechanics">
-      <article class="mechanic reveal">
-        <div><span class="kicker">Задача Кирша</span><h3>Пластина с эллиптическим отверстием</h3></div>
-        <div class="imagebox"><img src="figs/kirsch_scheme.png" alt="Схема задачи Кирша в ANSYS"></div>
-        <div class="imagebox"><img src="figs/kirsch_stress.png" alt="Поле напряжений задачи Кирша в ANSYS"></div>
-        <p class="caption"><b>Входы:</b> полуоси отверстия и размеры пластины. <b>Выход:</b> максимальное эквивалентное напряжение.</p>
-      </article>
-      <article class="mechanic reveal">
-        <div><span class="kicker">Консоль</span><h3>Балка, защемлённая с одного конца</h3></div>
-        <div class="imagebox"><img src="figs/cantilever_scheme.png" alt="Схема консольной балки в ANSYS"></div>
-        <div class="imagebox"><img src="figs/cantilever_stress.png" alt="Поле напряжений консоли в ANSYS"></div>
-        <p class="caption"><b>Входы:</b> длина, высота, толщина и сила. <b>Выходы:</b> прогиб, напряжение, пластическая деформация или амплитуда.</p>
-      </article>
-    </div>
-    <div class="footer"><span>Изображения получены в ANSYS Mechanical APDL</span><span>03 / 12</span></div>
-  </section>
-
-  <section class="slide orange" data-slide="4">
-    <div class="eyebrow reveal">Почему одной модели недостаточно</div>
-    <h2 class="reveal">Пластичность создаёт порог, резонанс - острый пик</h2>
-    <div class="content plot-pair">
-      <article class="plot-card reveal">
-        <div><span class="kicker">Упругопластический изгиб</span><h3>После 250 МПа появляется остаточная деформация</h3></div>
-        <div class="plot"><img src="figs/plastic_threshold.png" alt="Порог пластической деформации"></div>
-        <p class="caption">112 из 200 точек перешли в пластику, 88 остались упругими. Порог есть, но отклик после него остаётся регулярным.</p>
-      </article>
-      <article class="plot-card reveal">
-        <div><span class="kicker">Гармонический анализ</span><h3>Около 9 Гц амплитуда меняется в 66,3 раза</h3></div>
-        <div class="plot"><img src="figs/resonance_peak.png" alt="Резонансный пик около 9 Гц"></div>
-        <p class="caption">При демпфировании около 3% небольшое изменение параметров резко меняет амплитуду отклика.</p>
-      </article>
-    </div>
-    <div class="footer"><span>Одна геометрия · разные режимы · разная сложность аппроксимации</span><span>04 / 12</span></div>
-  </section>
-
-  <section class="slide" data-slide="5">
-    <div class="eyebrow reveal">Описываем данные</div>
-    <h2 class="reveal">1000 собственных расчётов, но не одна смешанная таблица</h2>
-    <div class="content">
-      <div class="segments reveal" aria-label="Распределение расчётов по постановкам">
-        <div class="segment seg1"><b>160</b><span>Кирш</span></div>
-        <div class="segment seg2"><b>320</b><span>упругая консоль</span></div>
-        <div class="segment seg3"><b>120</b><span>расширенный диапазон</span></div>
-        <div class="segment seg4"><b>200</b><span>пластичность</span></div>
-        <div class="segment seg5"><b>200</b><span>резонанс</span></div>
-      </div>
-      <div class="callout reveal">
-        <p><b>Каждая постановка обучается отдельно:</b> у задач разные входы, отклики и физический смысл. Число 1000 - сумма пяти экспериментов.</p>
-      </div>
-      <div class="pipeline reveal">
-        <div class="step"><b>1. LHS</b><span>равномерно покрывает диапазоны параметров</span></div>
-        <div class="step"><b>2. APDL</b><span>подставляет геометрию, материал и нагрузку</span></div>
-        <div class="step"><b>3. ANSYS</b><span>выполняет отдельный КЭ-расчёт каждой точки</span></div>
-        <div class="step"><b>4. CSV</b><span>сохраняет входы и физические отклики</span></div>
-      </div>
-    </div>
-    <div class="footer"><span>Собственные данные · LHS · параметрические APDL-макросы</span><span>05 / 12</span></div>
-  </section>
-
-  <section class="slide navy" data-slide="6">
-    <div class="eyebrow reveal">Модели и эксперимент</div>
-    <h2 class="reveal">Восемь моделей сравниваются по одной методике</h2>
-    <div class="content cols">
-      <div class="panel reveal">
-        <span class="kicker">Говорим о всех моделях</span>
-        <div class="model-map">
-          <div class="model-group"><b>Линейный baseline</b><span>Ridge</span></div>
-          <div class="model-group"><b>Вероятностная модель</b><span>Gaussian Process Regression</span></div>
-          <div class="model-group orange"><b>Нейросеть</b><span>MLPRegressor</span></div>
-          <div class="model-group orange"><b>Ансамбли деревьев</b><span>Random Forest, Gradient Boosting, XGBoost, LightGBM, CatBoost</span></div>
-        </div>
-        <div class="callout" style="margin-top:1.8vh">
-          <p><b>Осознанный выбор:</b> GPR хорошо использует гладкость и малые выборки; деревья проверяют преимущество на порогах, экстремальных диапазонах и пиках.</p>
-        </div>
-      </div>
-      <div class="panel protocol reveal">
-        <div class="protocol-row"><div class="n">5×3</div><div><b>Повторная кросс-валидация</b><span>5 фолдов на трёх значениях random seed</span></div></div>
-        <div class="protocol-row"><div class="n">4</div><div><b>Метрики качества</b><span>R², MAE, RMSE и MAPE</span></div></div>
-        <div class="protocol-row"><div class="n">5</div><div><b>Настроенных ансамблей</b><span>гиперпараметры деревьев подбираются через Optuna</span></div></div>
-        <div class="protocol-row"><div class="n">SHAP</div><div><b>Физическая проверка признаков</b><span>важности сопоставляются с инженерной логикой задачи</span></div></div>
-      </div>
-    </div>
-    <div class="footer"><span>Единые данные · единые разбиения · одинаковые метрики</span><span>06 / 12</span></div>
-  </section>
-
-  <section class="slide" data-slide="7">
-    <div class="eyebrow reveal">Главный результат</div>
-    <h2 class="reveal">На гладких откликах лидирует GPR, на экстремуме и резонансе - CatBoost</h2>
-    <div class="content" style="display:grid;grid-template-rows:1fr auto;gap:1.5vh">
-      <div class="figure-frame reveal"><img class="figure" src="figs/fig_crossover.png" alt="Сравнение GPR и лучшего бустинга по постановкам"></div>
-      <div class="callout orange reveal">
-        <p><b>Практический вывод:</b> выбирать алгоритм только по типу таблицы нельзя. Важны характер физического отклика, диапазон параметров и плотность расчётных точек.</p>
-      </div>
-    </div>
-    <div class="footer"><span>R² по повторной 5-fold cross-validation</span><span>07 / 12</span></div>
-  </section>
-
-  <section class="slide orange" data-slide="8">
-    <div class="eyebrow reveal">Исследовательская история</div>
-    <h2 class="reveal">Граница нашлась не там, где я ожидал</h2>
-    <div class="content">
-      <div class="story">
-        <article class="story-item reveal">
-          <div class="idx">01</div>
-          <h3>Гладкие задачи</h3>
-          <p>Кирш и обычная консоль подтвердили преимущество GPR на малых инженерных выборках: R² около 0,99.</p>
-        </article>
-        <article class="story-item reveal">
-          <div class="idx">02</div>
-          <h3>Пластичность</h3>
-          <p>Я ожидал смены лидера после порога текучести, но GPR сохранил R² = 0,99 против 0,85 у CatBoost.</p>
-        </article>
-        <article class="story-item reveal">
-          <div class="idx">03</div>
-          <h3>Резонанс</h3>
-          <p>Только острый пик сменил лидера: CatBoost получил R² = 0,61 против 0,45 у GPR.</p>
-        </article>
-      </div>
-      <div class="callout reveal" style="margin-top:3.2vh">
-        <p><b>Новизна результата:</b> работа не объявляет одну модель лучшей для всех задач. Она показывает экспериментальный путь выбора суррогата и условия, при которых лидер меняется.</p>
-      </div>
-    </div>
-    <div class="footer"><span>Неподтвердившаяся гипотеза стала главным результатом</span><span>08 / 12</span></div>
-  </section>
-
-  <section class="slide navy" data-slide="9">
-    <div class="eyebrow reveal">Валидация результатов</div>
-    <h2 class="reveal">ML-метрик недостаточно: расчёт должен сохранять физический смысл</h2>
-    <div class="content">
-      <div class="validation">
-        <div class="check reveal"><div class="checkmark">✓</div><div><b>Кирш против формулы Инглиса</b><span>медианная ошибка 3,24%, максимальная 6,91% при критерии не более 10%</span></div></div>
-        <div class="check reveal"><div class="checkmark">✓</div><div><b>Консоль против Эйлера-Бернулли</b><span>ошибка прогиба 0,81% при критерии не более 5%</span></div></div>
-        <div class="check reveal"><div class="checkmark">✓</div><div><b>Порог пластичности</b><span>совпадение с балочной оценкой 98% при критерии не менее 95%</span></div></div>
-        <div class="check reveal"><div class="checkmark">✓</div><div><b>Положение резонанса</b><span>ошибка собственной частоты 0,87%, амплитудный диапазон 66,3 раза</span></div></div>
-      </div>
-      <div class="pipeline reveal" style="margin-top:2.4vh">
-        <div class="step"><b>Формулы</b><span>ловят ошибку масштаба и единиц</span></div>
-        <div class="step"><b>5-fold × 3 seed</b><span>проверяет устойчивость ML-качества</span></div>
-        <div class="step"><b>Граница диапазона</b><span>запрещает слепую экстраполяцию</span></div>
-        <div class="step"><b>ANSYS финалиста</b><span>подтверждает инженерное решение</span></div>
-      </div>
-    </div>
-    <div class="footer"><span>Физика · статистика · границы применимости · контрольный расчёт</span><span>09 / 12</span></div>
-  </section>
-
-  <section class="slide" data-slide="10" id="demo">
-    <div class="eyebrow reveal">MVP и финальное демо</div>
-    <h2 class="reveal">Готовые результаты открываются мгновенно, выбранные модели пересчитываются</h2>
-    <div class="content cols cols-34">
-      <div class="reveal" style="display:flex;flex-direction:column;gap:1.5vh">
-        <div class="callout"><p><b>Режим 1.</b> Готовые результаты всех 8 моделей: 5-fold × 3 random seed.</p></div>
-        <div class="callout"><p><b>Режим 2.</b> Быстрый live-пересчёт выбранных моделей: 5-fold × 1 seed.</p></div>
-        <div class="callout orange"><p><b>Путь пользователя:</b> выбрать постановку -> сравнить модели -> открыть метрики -> проверить ограничения.</p></div>
-        <p class="caption">Быстрый режим не меняет число фолдов. Для демонстрации сокращается только количество повторов по seed.</p>
-      </div>
-      <div class="screen reveal"><img src="figs/streamlit_demo_jmlc_final.png" alt="Интерфейс Streamlit-приложения"></div>
-    </div>
-    <div class="footer"><span>Streamlit · реальные CSV · воспроизводимый пересчёт</span><span>10 / 12</span></div>
-  </section>
-
-  <section class="slide orange" data-slide="11">
-    <div class="eyebrow reveal">Инженерия и применение ИИ</div>
-    <h2 class="reveal">ИИ ускорял разработку, но не принимал инженерные решения</h2>
-    <div class="content human-ai">
-      <div class="lane reveal">
-        <h3 class="accent">Ответственность автора</h3>
-        <ul class="list">
-          <li>постановка задач механики и диапазоны параметров;</li>
-          <li>APDL-макросы, сетки, нагрузки и граничные условия;</li>
-          <li>выбор гипотез, интерпретация и физическая валидация;</li>
-          <li>проверка логов, исправление CI и Docker;</li>
-          <li>финальные выводы и границы применимости.</li>
-        </ul>
-      </div>
-      <div class="lane reveal">
-        <h3 class="danger">Где помогали LLM-инструменты</h3>
-        <ul class="list">
-          <li>черновики Python-пайплайна и обвязки cross-validation;</li>
-          <li>Optuna, тесты, Docker и GitHub Actions;</li>
-          <li>поиск типовых причин ошибок по логам;</li>
-          <li>рефакторинг и документация.</li>
-        </ul>
-        <div class="callout orange" style="margin-top:1.5vh">
-          <p><b>Принцип:</b> сгенерированный код проходит тесты, а численный результат - физическую проверку.</p>
-        </div>
-      </div>
-    </div>
-    <div class="footer"><span>Python · pytest · Docker · GitHub Actions · LLM-assisted development</span><span>11 / 12</span></div>
-  </section>
-
-  <section class="slide dark" data-slide="12">
-    <div class="eyebrow reveal" style="color:#72d4c9">Итог и следующий шаг</div>
-    <h2 class="reveal" style="font-size:clamp(2.45rem,4.6vw,4.8rem);max-width:1150px">Суррогат не заменяет инженера и ANSYS. Он делает массовый поиск вариантов практически возможным.</h2>
-    <div class="content" style="height:auto;margin-top:3.2vh">
-      <div class="cols reveal" style="height:auto">
-        <div>
-          <span class="kicker" style="color:#72d4c9">Развитие проекта</span>
-          <ul class="list">
-            <li>от скалярного отклика перейти к восстановлению полного поля;</li>
-            <li>автоматически определять выход за область применимости;</li>
-            <li>перенести пайплайн на отечественные КЭ-решатели.</li>
-          </ul>
-        </div>
-        <div>
-          <span class="kicker" style="color:#72d4c9">Почему AI Talent Hub</span>
-          <p style="margin-top:1vh">Industrial Track и лаборатория iMak AI дают мой следующий шаг: от ML-модели в инженерной задаче к надёжной промышленной AI-системе.</p>
-          <p style="margin-top:1vh;color:#d2e0e6">Я приношу механику, ANSYS, математическую базу и опыт преподавания более чем 50 ученикам.</p>
-        </div>
-      </div>
-      <div class="qr-row reveal">
-        <div class="qr">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;margin=8&amp;data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR-код репозитория">
-          <div><b>Код, данные и README</b><span>github.com/alexandersavintsev/fea-surrogate-benchmark</span></div>
-        </div>
-        <div class="qr">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;margin=8&amp;data=https%3A%2F%2Falexandersavintsev.github.io%2Ffea-surrogate-benchmark%2Fpresentation-jmlc-final.html" alt="QR-код новой презентации">
-          <div><b>Эта презентация онлайн</b><span>presentation-jmlc-final.html</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="footer"><span>Александр Савинцев · 2026</span><span>12 / 12</span></div>
-  </section>
-
-  <div class="nav" aria-label="Навигация по презентации">
-    <button id="prev" aria-label="Предыдущий слайд">‹</button>
-    <div class="dots" id="dots"></div>
-    <span class="counter" id="counter">1 / 12</span>
-    <span class="timer" id="timer">05:00</span>
-    <button id="next" aria-label="Следующий слайд">›</button>
   </div>
+</div>
 
-  <script>
-    const slides=[...document.querySelectorAll(".slide")];
-    const dots=document.getElementById("dots");
-    const counter=document.getElementById("counter");
-    let current=1;
-    let remaining=300;
-    let timerStarted=false;
-    let timerHandle=null;
+<!-- 3 -->
+<div class="slide" data-slide="3">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 13 · Решение и импакт</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">ANSYS создаёт обучающую выборку, ML ускоряет повторные оценки</h2>
+    <div class="rule reveal"></div>
+    <div class="flow reveal">
+      <div class="panel t-navy"><div class="kicker">01 · Диапазоны</div><p class="small" style="margin:.4rem 0 0;">Инженер задаёт изменяемые параметры.</p></div>
+      <div class="panel t-teal"><div class="kicker">02 · ANSYS</div><p class="small" style="margin:.4rem 0 0;">LHS-точки рассчитываются полным МКЭ.</p></div>
+      <div class="panel t-teal"><div class="kicker">03 · Суррогат</div><p class="small" style="margin:.4rem 0 0;">Модель учится связывать входы и отклик.</p></div>
+      <div class="panel t-brick"><div class="kicker">04 · Проверка</div><p class="small" style="margin:.4rem 0 0;">Найденный вариант подтверждается в ANSYS.</p></div>
+    </div>
+    <div class="grid3" style="margin-top:1rem;">
+      <div class="panel t-teal reveal" style="padding:.9rem;"><div class="metric">≈2650×</div><div class="note" style="margin-top:.3rem;">ускорение одного отклика в измеренном примере</div></div>
+      <div class="panel t-navy reveal" style="padding:.9rem;"><div class="metric">MVP</div><div class="note" style="margin-top:.3rem;">Streamlit показывает готовый benchmark и пересчёт</div></div>
+      <div class="panel t-brick reveal" style="padding:.9rem;"><div class="metric">Не замена</div><div class="note" style="margin-top:.3rem;">финальная инженерная проверка остаётся в ANSYS</div></div>
+    </div>
+    <div class="panel reveal" style="margin-top:.85rem;padding:.7rem .9rem;border-left:3px solid var(--teal);font-size:.88rem;">Продуктовая гипотеза: суррогат сокращает дорогие КЭ-запуски, если инженер видит качество модели и границы её применимости.</div>
+  </div>
+</div>
 
-    slides.forEach((_,i)=>{
-      const dot=document.createElement("span");
-      dot.className="dot"+(i===0?" active":"");
-      dot.addEventListener("click",()=>goToSlide(i+1));
-      dots.appendChild(dot);
-    });
+<!-- 4 -->
+<div class="slide" data-slide="4">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 13 · Задачи механики</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Две геометрии проверяются в пяти физических режимах</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2">
+      <div class="panel t-teal reveal" style="padding:.85rem;display:grid;grid-template-rows:auto 1fr auto;gap:.5rem;">
+        <div><div class="kicker">Пластина Кирша</div><b>Растяжение пластины с эллиптическим отверстием</b></div>
+        <div class="quad">
+          <img src="figs/kirsch_scheme.png" alt="Схема задачи Кирша">
+          <img src="figs/kirsch_stress.png" alt="Поле напряжений задачи Кирша">
+          <img src="figs/kirsch_mesh.png" alt="Сетка задачи Кирша" style="grid-column:1 / 3;">
+        </div>
+        <div class="small">Входы: полуоси отверстия и размеры пластины. Отклик: максимальное эквивалентное напряжение.</div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.85rem;display:grid;grid-template-rows:auto 1fr auto;gap:.5rem;">
+        <div><div class="kicker">Консоль</div><b>Изгиб, пластичность и гармонический резонанс</b></div>
+        <div class="quad">
+          <img src="figs/cantilever_scheme.png" alt="Схема консоли">
+          <img src="figs/cantilever_stress.png" alt="Поле напряжений консоли">
+          <img src="figs/plastic_threshold.png" alt="Порог пластичности">
+          <img src="figs/resonance_peak.png" alt="Резонансный пик">
+        </div>
+        <div class="small">Входы: геометрия, нагрузка и частота. Отклики: прогиб, напряжение, пластическая деформация, амплитуда.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function animateSlide(slide){
-      slide.querySelectorAll(".reveal").forEach(el=>{
-        el.style.transition="none";el.style.opacity="0";el.style.transform="translateY(10px)";
-      });
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        slide.querySelectorAll(".reveal").forEach((el,i)=>{
-          el.style.transition=`opacity .36s ease ${Math.min(i*.045,.22)}s, transform .36s ease ${Math.min(i*.045,.22)}s`;
-          el.style.opacity="1";el.style.transform="none";
-        });
-      }));
-    }
+<!-- 5 -->
+<div class="slide" data-slide="5">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 13 · Данные</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">1000 собственных расчётов - пять отдельных наборов данных</h2>
+    <div class="rule reveal"></div>
+    <div class="bar reveal">
+      <div class="b1"><b>160</b><span>Кирш</span></div>
+      <div class="b2"><b>320</b><span>упругая консоль</span></div>
+      <div class="b3"><b>120</b><span>экстремум</span></div>
+      <div class="b4"><b>200</b><span>пластичность</span></div>
+      <div class="b5"><b>200</b><span>резонанс</span></div>
+    </div>
+    <div class="grid2" style="margin-top:.85rem;">
+      <div class="panel t-navy reveal" style="padding:.9rem;">
+        <div class="kicker">Как получена каждая строка</div>
+        <div class="flow" style="grid-template-columns:repeat(4,1fr);margin-top:.55rem;">
+          <div class="panel"><b class="small">LHS</b><div class="tiny">равномерно покрывает диапазон</div></div>
+          <div class="panel"><b class="small">APDL</b><div class="tiny">подставляет параметры</div></div>
+          <div class="panel"><b class="small">ANSYS</b><div class="tiny">решает КЭ-задачу</div></div>
+          <div class="panel"><b class="small">CSV</b><div class="tiny">входы и физический отклик</div></div>
+        </div>
+      </div>
+      <div class="panel t-teal reveal" style="padding:.9rem;">
+        <div class="kicker">Специфика данных</div>
+        <ul class="tight">
+          <li>наборы не смешиваются: у каждой постановки своя схема признаков;</li>
+          <li>точки около текучести и резонанса не удаляются как выбросы - это физический сигнал;</li>
+          <li>диапазоны задаются до расчёта, поэтому экстраполяция контролируется отдельно.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function goToSlide(n){
-      n=Math.max(1,Math.min(slides.length,n));
-      slides.forEach(s=>s.classList.remove("active"));
-      const target=document.querySelector(`.slide[data-slide="${n}"]`);
-      target.classList.add("active");
-      current=n;
-      [...dots.children].forEach((d,i)=>d.classList.toggle("active",i===n-1));
-      counter.textContent=`${n} / ${slides.length}`;
-      animateSlide(target);
-    }
+<!-- 6 -->
+<div class="slide" data-slide="6">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 13 · Модели и эксперимент</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Восемь готовых алгоритмов сравниваются по одному протоколу</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2">
+      <div class="model-grid reveal">
+        <div class="panel t-navy"><div class="kicker">Базовая линия</div><b>Ridge</b><div class="tiny">проверка линейной зависимости</div></div>
+        <div class="panel t-teal"><div class="kicker">Гладкий суррогат</div><b>GPR</b><div class="tiny">ядро + оценка неопределённости</div></div>
+        <div class="panel t-navy"><div class="kicker">Нейросеть</div><b>MLPRegressor</b><div class="tiny">гибкая нелинейная аппроксимация</div></div>
+        <div class="panel t-brick"><div class="kicker">Деревья</div><b>Random Forest</b><div class="tiny">бэггинг деревьев</div></div>
+        <div class="panel t-brick" style="grid-column:1 / 3;"><div class="kicker">Бустинг</div><b>GradientBoosting · XGBoost · LightGBM · CatBoost</b><div class="tiny">четыре реализации, чтобы результат не зависел от одной библиотеки</div></div>
+      </div>
+      <div class="panel t-teal reveal" style="padding:1rem;">
+        <div class="kicker">Контракт эксперимента</div>
+        <div class="grid2" style="grid-template-columns:.75fr 1.25fr;gap:.6rem;margin-top:.55rem;">
+          <div class="panel" style="padding:.65rem;"><div class="metric">5 × 3</div><div class="tiny">folds × random seed</div></div>
+          <div class="panel" style="padding:.65rem;"><b class="small">R², MAE, RMSE, MAPE</b><div class="tiny">качество, абсолютная и относительная ошибка</div></div>
+          <div class="panel" style="padding:.65rem;"><b class="small">Optuna</b><div class="tiny">тюнинг всех ансамблей деревьев</div></div>
+          <div class="panel" style="padding:.65rem;"><b class="small">Одинаковые разбиения</b><div class="tiny">модели видят одни и те же train/test блоки</div></div>
+        </div>
+        <p class="small" style="margin:.7rem 0 0;"><b>Готовое:</b> реализации моделей из библиотек. <b>Сделано самостоятельно:</b> данные ANSYS, единая обвязка, сравнение, проверки и приложение.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function updateTimer(){
-      const m=String(Math.floor(Math.abs(remaining)/60)).padStart(2,"0");
-      const s=String(Math.abs(remaining)%60).padStart(2,"0");
-      document.getElementById("timer").textContent=(remaining<0?"+":"")+`${m}:${s}`;
-      remaining-=1;
-    }
-    function startTimer(){
-      if(timerStarted)return;
-      timerStarted=true;updateTimer();timerHandle=setInterval(updateTimer,1000);
-    }
-    function resetTimer(){
-      clearInterval(timerHandle);timerStarted=false;remaining=300;
-      document.getElementById("timer").textContent="05:00";
-    }
+<!-- 7 -->
+<div class="slide" data-slide="7">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 13 · Результат</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">GPR лидирует на гладких откликах, CatBoost - на экстремуме и резонансе</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2" style="grid-template-columns:1.18fr .82fr;">
+      <div class="figure-frame reveal" style="height:370px;">
+        <img src="figs/fig_crossover.png" alt="Карта смены лидера между GPR и CatBoost">
+      </div>
+      <div class="panel t-navy reveal" style="padding:.85rem;">
+        <table class="t compact">
+          <thead><tr><th>Постановка</th><th>GPR</th><th>CatBoost</th></tr></thead>
+          <tbody>
+            <tr><td>Кирш, 100</td><td class="w-gpr">0,9999</td><td class="num">0,9829</td></tr>
+            <tr><td>Консоль, 80</td><td class="w-gpr">0,9911</td><td class="num">0,8397</td></tr>
+            <tr><td>Экстремум, 120</td><td class="num">0,7609</td><td class="w-boost">0,8757</td></tr>
+            <tr><td>Пластичность, 200</td><td class="w-gpr">0,9910</td><td class="num">0,8452</td></tr>
+            <tr><td>Резонанс, 200</td><td class="num">0,4541</td><td class="w-boost">0,6085</td></tr>
+          </tbody>
+        </table>
+        <p class="tiny" style="margin:.55rem 0 0;">R², повторная 5-fold cross-validation на 3 значениях random seed.</p>
+        <div class="panel" style="margin-top:.7rem;padding:.65rem;border-left:3px solid var(--teal);font-size:.8rem;line-height:1.45;"><b>Практическое правило:</b> сначала оценить гладкость отклика, затем выбирать семейство суррогата.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    document.getElementById("prev").onclick=()=>goToSlide(current-1);
-    document.getElementById("next").onclick=()=>goToSlide(current+1);
-    document.getElementById("timer").onclick=()=>timerStarted?resetTimer():startTimer();
-    document.addEventListener("keydown",e=>{
-      if(["ArrowRight","PageDown"," ","Enter"].includes(e.key)){e.preventDefault();goToSlide(current+1)}
-      if(["ArrowLeft","PageUp","Backspace"].includes(e.key)){e.preventDefault();goToSlide(current-1)}
-      if(e.key.toLowerCase()==="t")startTimer();
-      if(e.key.toLowerCase()==="r")resetTimer();
-      if(e.key==="Home")goToSlide(1);
-      if(e.key==="End")goToSlide(slides.length);
-    });
-    let touchX=0;
-    document.addEventListener("touchstart",e=>touchX=e.changedTouches[0].screenX,{passive:true});
-    document.addEventListener("touchend",e=>{
-      const dx=e.changedTouches[0].screenX-touchX;
-      if(Math.abs(dx)>55)goToSlide(current+(dx<0?1:-1));
-    },{passive:true});
-    animateSlide(slides[0]);
-  </script>
+<!-- 8 -->
+<div class="slide" data-slide="8">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 13 · Оригинальность</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Главный результат вырос из гипотезы, которая не подтвердилась</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
+    <div class="timeline reveal">
+      <div class="panel t-navy">
+        <div class="metric">01</div>
+        <div class="kicker" style="margin-top:.4rem;">Ожидание</div>
+        <p class="small" style="margin:.45rem 0 0;">Порог текучести создаст достаточно резкий отклик, и деревья обойдут GPR.</p>
+      </div>
+      <div class="panel t-teal">
+        <div class="metric">02</div>
+        <div class="kicker" style="margin-top:.4rem;">Проверка</div>
+        <p class="small" style="margin:.45rem 0 0;">56% точек ушли в пластику, но GPR сохранил лидерство: 0,9910 против 0,8452.</p>
+      </div>
+      <div class="panel t-brick">
+        <div class="metric">03</div>
+        <div class="kicker" style="margin-top:.4rem;">Граница</div>
+        <p class="small" style="margin:.45rem 0 0;">На резонансном пике с диапазоном амплитуд 66× CatBoost стал лучше GPR.</p>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:1rem;padding:.85rem 1rem;border-left:4px solid var(--brick);font-size:.92rem;line-height:1.55;">
+      <b>Оригинальность:</b> проект не предлагает девятую модель. Он показывает, как физическое свойство отклика связано с выбором семейства суррогата. Вывод ограничен пятью исследованными постановками.
+    </div>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="slide" data-slide="9">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 13 · Валидация</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Высокого R² недостаточно - результат проверяется физикой</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2">
+      <div class="checks reveal">
+        <div class="check"><div class="ok">✓</div><div><b>Кирш против формулы Инглиса</b><span>медианная ошибка 3,24%, максимум 6,91%</span></div></div>
+        <div class="check"><div class="ok">✓</div><div><b>Консоль против Эйлера - Бернулли</b><span>ошибка прогиба 0,81%</span></div></div>
+        <div class="check"><div class="ok">✓</div><div><b>Начало пластичности</b><span>совпадение классификации 98,0%</span></div></div>
+        <div class="check"><div class="ok">✓</div><div><b>Первая собственная частота</b><span>ошибка относительно 9 Гц - 0,87%</span></div></div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.85rem;display:grid;grid-template-rows:1fr auto;gap:.55rem;">
+        <div class="figure-frame" style="min-height:0;">
+          <img src="figs/kirsch_b_slice.png" alt="Одномерный срез отклика задачи Кирша">
+        </div>
+        <div>
+          <div class="kicker">Граница применимости</div>
+          <p class="small" style="margin:.35rem 0 0;">Экстраполяции нельзя доверять автоматически. Рабочий диапазон фиксируется, а финальный кандидат подтверждается полным расчётом ANSYS.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 -->
+<div class="slide" data-slide="10">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 13 · MVP и демо</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">MVP превращает исследование в проверяемый инструмент</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2" style="grid-template-columns:1.25fr .75fr;">
+      <div class="screen reveal" style="height:385px;">
+        <img src="figs/streamlit_demo_jmlc_final.png" alt="Интерфейс Streamlit">
+      </div>
+      <div class="panel t-teal reveal" style="padding:1rem;">
+        <div class="kicker">Сценарий инженера</div>
+        <ol class="tight" style="padding-left:1.15rem;">
+          <li>выбрать физическую постановку;</li>
+          <li>посмотреть полный сохранённый benchmark;</li>
+          <li>пересчитать выбранные модели;</li>
+          <li>сравнить метрики и время.</li>
+        </ol>
+        <div class="panel" style="margin-top:.8rem;padding:.7rem;border-left:3px solid var(--brick);font-size:.8rem;line-height:1.45;">Полный эксперимент остаётся 5-fold × 3 random seed. Быстрый режим нужен только для живой демонстрации выбранных моделей.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="slide" data-slide="11">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 13 · Инженерия</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Воспроизводимость закрывает весь путь от APDL до интерфейса</h2>
+    <div class="rule reveal"></div>
+    <div class="flow reveal">
+      <div class="panel t-navy"><div class="kicker">Расчёт</div><b class="small">APDL-макросы</b><div class="tiny">параметры, сетка, нагрузки</div></div>
+      <div class="panel t-teal"><div class="kicker">Данные</div><b class="small">CSV + pandas</b><div class="tiny">раздельные схемы постановок</div></div>
+      <div class="panel t-teal"><div class="kicker">ML</div><b class="small">scikit-learn API</b><div class="tiny">единый протокол моделей</div></div>
+      <div class="panel t-brick"><div class="kicker">Продукт</div><b class="small">Streamlit</b><div class="tiny">готовые результаты и пересчёт</div></div>
+    </div>
+    <div class="grid4" style="margin-top:1rem;">
+      <div class="panel t-navy reveal" style="padding:.8rem;"><div class="kicker">Git</div><b class="small">История изменений</b><div class="tiny">код и данные в репозитории</div></div>
+      <div class="panel t-teal reveal" style="padding:.8rem;"><div class="kicker">Docker</div><b class="small">docker compose up</b><div class="tiny">одинаковое окружение</div></div>
+      <div class="panel t-teal reveal" style="padding:.8rem;"><div class="kicker">pytest</div><b class="small">4 физических теста</b><div class="tiny">регрессия результата</div></div>
+      <div class="panel t-brick reveal" style="padding:.8rem;"><div class="kicker">CI</div><b class="small">GitHub Actions</b><div class="tiny">lint + тесты на push</div></div>
+    </div>
+    <div class="panel reveal" style="margin-top:.8rem;padding:.65rem .85rem;border-left:3px solid var(--teal);font-size:.82rem;">Технологическая сложность - связать внешний КЭ-решатель, разные схемы данных, восемь моделей, физические проверки и пользовательский интерфейс.</div>
+  </div>
+</div>
+
+<!-- 12 -->
+<div class="slide" data-slide="12">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 13 · Применение ИИ</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Кодовые LLM-агенты ускоряли разработку, но не заменяли инженерную проверку</h2>
+    <div class="rule reveal" style="background:var(--brick);"></div>
+    <div class="grid2">
+      <div class="lane reveal">
+        <div class="kicker">LLM и кодовый агент</div>
+        <ul class="tight">
+          <li>черновики Python-пайплайна, Optuna и cross-validation;</li>
+          <li>тесты, Docker, CI и анализ типовых ошибок по логам;</li>
+          <li>рефакторинг, документация и проверка воспроизводимости.</li>
+        </ul>
+      </div>
+      <div class="lane brick reveal">
+        <div class="kicker" style="color:var(--brick);">Инженер</div>
+        <ul class="tight">
+          <li>постановка механики и выбор физических диапазонов;</li>
+          <li>решение, какую гипотезу проверять следующей;</li>
+          <li>чтение логов, тестирование кода и физическая валидация.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel t-navy reveal" style="margin-top:.9rem;padding:.85rem 1rem;">
+      <div class="kicker">Почему нужен контроль</div>
+      <p class="small" style="margin:.35rem 0 0;">При сбое CI модель сначала предположила проблему линтера, но тесты падали за секунду: причина оказалась в импортах pytest. При сборке Docker типовой совет очистить кэш не помог - в контекст случайно попадали тяжёлые результаты ANSYS.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 13 -->
+<div class="slide" data-slide="13">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>13 / 13 · Материалы и развитие</span></div>
+  <div class="glow" style="width:420px;height:420px;top:0;right:0;background:var(--teal);opacity:.09"></div>
+  <div class="content" style="text-align:center;">
+    <h2 class="big-title reveal" style="font-size:clamp(1.9rem,4vw,3.2rem);">Следующий шаг - полный физический отклик</h2>
+    <div class="rule reveal" style="margin:.6rem auto 1rem;"></div>
+    <p class="reveal" style="max-width:72ch;margin:0 auto .8rem;font-size:.92rem;">Перейти от одного скалярного значения к полю напряжений, автоматически отслеживать выход за область применимости и проверить MVP с инженерами-расчётчиками.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:820px;margin:0 auto;">
+      <div class="panel qr qr-small reveal" style="padding:.8rem;">
+        <div class="kicker">README · GitHub</div>
+        <div style="margin-top:.3rem;color:var(--ink);font-weight:700;font-size:.86rem;">Код, данные, метрики и запуск</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR-код репозитория" style="margin-top:.5rem;">
+      </div>
+      <div class="panel qr qr-small reveal" style="padding:.8rem;">
+        <div class="kicker">Презентация онлайн</div>
+        <div style="margin-top:.3rem;color:var(--ink);font-weight:700;font-size:.86rem;">Резервная ссылка для комиссии</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=https%3A%2F%2Falexandersavintsev.github.io%2Ffea-surrogate-benchmark%2Fpresentation-jmlc-final.html" alt="QR-код презентации" style="margin-top:.5rem;">
+      </div>
+    </div>
+    <div class="panel reveal" style="margin:.8rem auto 0;max-width:820px;padding:.65rem 1rem;border-left:3px solid var(--brick);text-align:left;font-size:.82rem;line-height:1.45;"><b style="color:var(--ink);">Текущая граница:</b> пять постановок и скалярные отклики. <b style="color:var(--ink);">Следующая продуктовая проверка:</b> 3-5 инженеров, время сценария и доверие к границе применимости.</div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav">
+  <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">05:00</span></div>
+  <button class="nav-btn" onclick="changeSlide(-1)" aria-label="Назад">&#8249;</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="changeSlide(1)" aria-label="Вперёд">&#8250;</button>
+  <span class="counter" id="counter">1 / 13</span>
+</div>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+const dotsContainer = document.getElementById('dots');
+const counter = document.getElementById('counter');
+for (let i=1;i<=total;i++){ const d=document.createElement('div'); d.className='dot'+(i===1?' active':''); d.onclick=()=>goToSlide(i); dotsContainer.appendChild(d); }
+function goToSlide(n){ const p=document.querySelector('.slide.active'), x=document.querySelector('.slide[data-slide="'+n+'"]'); if(p)p.classList.remove('active'); if(x){x.classList.add('active'); animateSlide(x);} current=n; updateNav(); }
+function changeSlide(d){ let n=current+d; if(n<1)n=total; if(n>total)n=1; goToSlide(n); }
+function updateNav(){ document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===current)); counter.textContent=current+' / '+total; }
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();changeSlide(1);} if(e.key==='ArrowLeft'){e.preventDefault();changeSlide(-1);} });
+let tsx=0; document.addEventListener('touchstart',e=>{tsx=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{ const d=tsx-e.changedTouches[0].clientX; if(Math.abs(d)>50) changeSlide(d>0?1:-1); });
+function animateSlide(s){ s.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transition='none'; el.style.opacity='0'; el.style.transform='translateY(12px)'; el.offsetHeight; const dl=i*0.06; el.style.transition='opacity .3s ease '+dl+'s, transform .3s ease '+dl+'s'; el.style.opacity='1'; el.style.transform='translateY(0)'; }); }
+const cd=document.getElementById('countdown'), tb=document.getElementById('timerBox');
+let remaining=300;
+function paint(){ const m=String(Math.floor(remaining/60)).padStart(2,'0'), s=String(remaining%60).padStart(2,'0'); cd.textContent=m+':'+s; tb.classList.toggle('warn',remaining<=120&&remaining>60); tb.classList.toggle('danger',remaining<=60); }
+paint(); setInterval(()=>{ if(remaining>0){remaining--;paint();} },1000);
+animateSlide(document.querySelector('.slide.active'));
+</script>
 </body>
 </html>
