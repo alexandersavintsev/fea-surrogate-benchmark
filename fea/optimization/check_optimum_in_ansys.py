@@ -2,7 +2,7 @@
 """
 Проверка найденной оптимизатором точки полным расчётом в ANSYS.
 Берёт лучшие точки из optimization_results.csv, подставляет (a,b,lx,ly) в
-макрос Кирша plate_with_hole_ROMAI.txt, запускает ANSYS в batch-режиме,
+макрос Кирша kirsch_plate.mac, запускает ANSYS в batch-режиме,
 читает obj.txt и сравнивает прогноз суррогата с расчётом ANSYS.
 
 Требует наличия ANSYS и рабочего run_ansys.bat (как для задачи Кирша).
@@ -17,7 +17,7 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 DATA = os.path.join(ROOT, "data")
-KIRSCH_MACRO = os.path.abspath(os.path.join(ROOT, "..", "plate_with_hole_ROMAI.txt"))
+KIRSCH_MACRO = os.path.abspath(os.path.join(ROOT, "..", "apdl", "kirsch_plate.mac"))
 KIRSCH_BAT   = os.path.abspath(os.path.join(ROOT, "..", "run_ansys.bat"))
 PARAMS = ["a", "b", "lx", "ly"]
 
@@ -53,7 +53,7 @@ def main():
     rows = []
     for _, r in res.iterrows():
         vals = {k: float(r[k]) for k in PARAMS}
-        patch(KIRSCH_MACRO, os.path.join(wd, "plate_with_hole_ROMAI.txt"), vals)
+        patch(KIRSCH_MACRO, os.path.join(wd, "kirsch_plate.mac"), vals)
         shutil.copy(KIRSCH_BAT, os.path.join(wd, "run_ansys.bat"))
         subprocess.run(["cmd", "/c", "run_ansys.bat"], cwd=wd, check=False)
         obj = parse_obj(os.path.join(wd, "obj.txt"))

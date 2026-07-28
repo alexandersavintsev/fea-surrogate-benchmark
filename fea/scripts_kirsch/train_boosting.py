@@ -15,7 +15,7 @@ from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 
 
 WORKDIR = Path(r"C:\ANSYS_WORK_DIPLOM")
-CSV_PATH = WORKDIR / "kirsch_romai_doe_100.csv"
+CSV_PATH = WORKDIR / "kirsch_doe_100.csv"
 OUT_DIR = WORKDIR / "PYTHON_MODELS_100"
 OUT_DIR.mkdir(exist_ok=True)
 

@@ -1,7 +1,8 @@
 """Единый прогон всех задач одной командой -> сводная таблица кроссовера.
 
-Идея: на гладких задачах (Кирш, упругая консоль) лучшая - GPR; на негладких
-(пластическая консоль, синтетические разрывные/пороговые) - ансамбли деревьев.
+Идея: проверить, как характер отклика и размер выборки меняют лидера.
+На гладких задачах и одиночном пороге обычно сильнее GPR. На расширенном
+диапазоне консоли и резонансном пике лидер меняется в пользу бустинга.
 Скрипт прогоняет 8 моделей по k-fold CV на каждом доступном датасете, помечает
 режим (smooth / non-smooth) и собирает результаты в один CSV + печатает
 кроссовер (GPR против лучшего дерева).
@@ -26,7 +27,7 @@ TREE_MODELS = {"RandomForest", "GradientBoosting(sk)", "XGBoost", "LightGBM", "C
 CONFIG = [
     # --- гладкие упругие задачи -> ожидаем победу GPR ---
     dict(name="kirsch_100",     kind="csv", regime="smooth",
-         path="data/kirsch/kirsch_romai_doe_100.csv", feats=["a","b","lx","ly"], target="smax"),
+         path="data/kirsch/kirsch_doe_100.csv", feats=["a","b","lx","ly"], target="smax"),
     dict(name="kirsch_30_A",    kind="csv", regime="smooth",
          path="data/kirsch/kirsch_30_seedA.csv", feats=["a","b","lx","ly"], target="smax"),
     dict(name="kirsch_30_B",    kind="csv", regime="smooth",
@@ -40,7 +41,7 @@ CONFIG = [
     dict(name="cantilever_240", kind="csv", regime="smooth",
          path="data/cantilever/ext_h020_N240/cantilever_dataset_ext_h020_N240.csv",
          feats=["len","height","thk","force"], target="sig_max"),
-    # --- негладкая пластическая консоль (появится после прогона ANSYS) ---
+    # --- порог текучести: проверка, достаточно ли его для смены лидера ---
     dict(name="plastic_cantilever", kind="csv", regime="non-smooth",
          path="data/plastic_results.csv",
          feats=["len","height","thk","force"], target="epl_max"),

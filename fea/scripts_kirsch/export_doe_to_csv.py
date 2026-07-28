@@ -4,7 +4,7 @@ import pandas as pd
 
 WORKDIR = Path(r"C:\ANSYS_WORK_DIPLOM")
 DOE_PATH = WORKDIR / "doe.npz"
-CSV_PATH = WORKDIR / "kirsch_romai_doe_100.csv"
+CSV_PATH = WORKDIR / "kirsch_doe_100.csv"
 
 data = np.load(DOE_PATH, allow_pickle=True)
 

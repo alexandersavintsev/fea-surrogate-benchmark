@@ -3,7 +3,7 @@
 Параметрическая оптимизация на основе ML-суррогата (раздел 5).
 
 По умолчанию работает с задачей Кирша по реальному 100-точечному датасету
-(kirsch_romai_doe_100.csv): входы (a, b, lx, ly), выходы (smax, area).
+(kirsch_doe_100.csv): входы (a, b, lx, ly), выходы (smax, area).
 Суррогат GPR обучается на этих данных и используется в двух задачах:
 
   Задача A: minimize smax  при ограничении area <= AREA_MAX
@@ -39,9 +39,9 @@ BOUNDS  = [(8.0, 16.0), (15.0, 25.0), (100.0, 140.0), (100.0, 140.0)]
 
 # поиск датасета Кирша
 CANDIDATES = [
-    os.path.join(ROOT, "..", "kirsch_romai_doe_100.csv"),
+    os.path.join(ROOT, "..", "kirsch_doe_100.csv"),
     os.path.join(ROOT, "..", "GPR_100_doe_export.csv"),
-    os.path.join(DATA, "kirsch_romai_doe_100.csv"),
+    os.path.join(DATA, "kirsch_doe_100.csv"),
 ]
 
 
@@ -52,7 +52,7 @@ def load_dataset():
             df.columns = [c.strip().lstrip("﻿") for c in df.columns]
             return df[INPUTS].values.astype(float), df[OUTPUTS].values.astype(float), os.path.abspath(p)
     raise FileNotFoundError(
-        "Не найден датасет Кирша (kirsch_romai_doe_100.csv / GPR_100_doe_export.csv). "
+        "Не найден датасет Кирша (kirsch_doe_100.csv / GPR_100_doe_export.csv). "
         "Положите его рядом со скриптом или в ../data.")
 
 

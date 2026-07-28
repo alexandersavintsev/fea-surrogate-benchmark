@@ -2,7 +2,7 @@
 """
 Генерация DOE-выборки методом латинского гиперкуба для задачи об изгибе
 консольно защемлённой пластины и (при наличии ANSYS) автоматический сбор
-датасета через макрос cantilever_plate_romai.mac + run_cantilever_ansys.bat.
+датасета через макрос cantilever_plate.mac + run_cantilever_ansys.bat.
 
 Запуск:
     python generate_cantilever_doe.py            # только входная DOE-таблица
@@ -25,7 +25,7 @@ N_SNAPSHOTS = 100
 SEED = 20240601
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-MACRO = os.path.join(HERE, "cantilever_plate_romai.mac")
+MACRO = os.path.abspath(os.path.join(HERE, "..", "..", "apdl", "cantilever_plate.mac"))
 BAT   = os.path.join(HERE, "run_cantilever_ansys.bat")
 
 
@@ -108,7 +108,7 @@ def main():
     os.makedirs(workdir, exist_ok=True)
     rows = []
     for i, vals in enumerate(X):
-        patch_macro(names, vals, MACRO, os.path.join(workdir, "cantilever_plate_romai.mac"))
+        patch_macro(names, vals, MACRO, os.path.join(workdir, "cantilever_plate.mac"))
         shutil.copy(BAT, os.path.join(workdir, "run_cantilever_ansys.bat"))
         subprocess.run(["cmd", "/c", "run_cantilever_ansys.bat"], cwd=workdir, check=False)
         obj = parse_obj(os.path.join(workdir, "obj.txt"))
