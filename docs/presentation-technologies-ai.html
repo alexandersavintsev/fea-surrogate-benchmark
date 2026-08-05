@@ -25,6 +25,12 @@
   .slide::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
     background-image:linear-gradient(rgba(26,26,24,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,24,.045) 1px, transparent 1px);
     background-size:34px 34px; mask-image:radial-gradient(ellipse at center, #000 35%, transparent 88%); }
+  .slide[data-criteria]::after{
+    content:'ТЕХНОЛОГИИ ИИ · ' attr(data-criteria);
+    position:absolute; left:clamp(1rem,2.4vw,2.4rem); bottom:9px; z-index:90;
+    font-family:var(--mono); font-size:.54rem; line-height:1; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); white-space:nowrap;
+  }
   .glow{ position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
   .slide > .content{ position:relative; z-index:2; width:100%; max-width:1200px; padding:clamp(1rem,2.4vw,2.4rem); }
   /* верхний колонтитул как штамп чертежа */
@@ -125,7 +131,7 @@
 <div class="deck">
 
 <!-- 1 -->
-<div class="slide active" data-slide="1">
+<div class="slide active" data-slide="1" data-criteria="Качество выступления">
   <div class="glow" style="width:520px;height:520px;top:-160px;right:-140px;background:var(--teal);opacity:.10"></div>
   <div class="glow" style="width:340px;height:340px;bottom:-120px;left:-90px;background:var(--brick);opacity:.07"></div>
   <div class="content">
@@ -157,7 +163,7 @@
 </div>
 
 <!-- 2 -->
-<div class="slide" data-slide="2" data-criteria="Продуктовое мышление">
+<div class="slide" data-slide="2" data-criteria="Корректность постановки задачи · Понимание проблемы">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 12 · Проблема</span></div>
   <div class="content">
     <h2 class="section-title reveal">Проблема</h2>
@@ -188,7 +194,7 @@
   </div>
 </div>
 <!-- 3 -->
-<div class="slide" data-slide="3" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="3" data-criteria="Корректность постановки задачи · Понимание проблемы">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 12 · Цель и задачи</span></div>
   <div class="content">
     <h2 class="section-title reveal">Цель и задачи проекта</h2>
@@ -223,7 +229,7 @@
 </div>
 
 <!-- 4 -->
-<div class="slide" data-slide="4" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="4" data-criteria="Понимание проблемы · Качество проработки">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Продукт и решение</span></div>
   <div class="content">
     <h2 class="section-title reveal">Продукт и решение</h2>
@@ -258,7 +264,7 @@
   </div>
 </div>
 <!-- 5 -->
-<div class="slide" data-slide="5" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="5" data-criteria="Понимание проблемы · Качество проработки">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Специфика данных</span></div>
   <div class="content">
     <h2 class="section-title reveal">Специфика данных</h2>
@@ -287,7 +293,7 @@
   </div>
 </div>
 <!-- 6 -->
-<div class="slide" data-slide="6" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="6" data-criteria="Качество проработки">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Метрики</span></div>
   <div class="content">
     <h2 class="section-title reveal">Метрики и протокол проверки</h2>
@@ -334,7 +340,7 @@
   </div>
 </div>
 <!-- 7 -->
-<div class="slide" data-slide="7" data-criteria="Data Science">
+<div class="slide" data-slide="7" data-criteria="Качество проработки">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Результат</span></div>
   <div class="content">
     <h2 class="section-title reveal">Результат: карта выбора модели</h2>
@@ -350,7 +356,7 @@
   </div>
 </div>
 <!-- 8 -->
-<div class="slide" data-slide="8" data-criteria="Продуктовое мышление · Разработка и инженерия">
+<div class="slide" data-slide="8" data-criteria="Качество проработки · Качество выступления">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 12 · Демо</span></div>
   <div class="content">
     <h2 class="section-title reveal">Демо: тот же эксперимент без командной строки</h2>
@@ -372,7 +378,7 @@
   </div>
 </div>
 <!-- 9 -->
-<div class="slide" data-slide="9" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="9" data-criteria="Оригинальность предложенного решения">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 12 · Технологическая новизна</span></div>
   <div class="content">
     <h2 class="section-title reveal">Технологическая новизна</h2>
@@ -405,7 +411,7 @@
   </div>
 </div>
 <!-- 10 -->
-<div class="slide" data-slide="10" data-criteria="Data Science · Разработка и инженерия">
+<div class="slide" data-slide="10" data-criteria="Понимание проблемы · Ответы на вопросы">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 12 · Риски</span></div>
   <div class="content">
     <h2 class="section-title reveal">Риски</h2>
@@ -441,7 +447,7 @@
 </div>
 
 <!-- 11 -->
-<div class="slide" data-slide="11" data-criteria="Разработка и инженерия">
+<div class="slide" data-slide="11" data-criteria="Качество проработки">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 12 · Перечень технологий</span></div>
   <div class="glow" style="width:390px;height:390px;top:-120px;right:-90px;background:var(--navy);opacity:.06"></div>
   <div class="content">
@@ -488,7 +494,7 @@
 </div>
 
 <!-- 12 -->
-<div class="slide" data-slide="12" data-criteria="Продуктовое мышление">
+<div class="slide" data-slide="12" data-criteria="Качество выступления · Ответы на вопросы">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Материалы</span></div>
   <div class="content" style="text-align:center;">
     <h2 class="big-title reveal" style="font-size:clamp(1.9rem,4vw,3.2rem);">Материалы проекта</h2>
