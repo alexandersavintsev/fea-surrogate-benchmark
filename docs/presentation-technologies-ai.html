@@ -488,56 +488,32 @@
 </div>
 
 <!-- 12 -->
-<div class="slide" data-slide="12">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Итог и материалы</span></div>
-  <div class="glow" style="width:430px;height:430px;top:-140px;right:-110px;background:var(--teal);opacity:.08"></div>
-  <div class="content">
-    <h2 class="section-title reveal">Результат - не «лучшая модель», а правило выбора</h2>
-    <div class="rule reveal" style="width:120px;background:linear-gradient(90deg,var(--teal),var(--brick));"></div>
-    <div style="display:grid;grid-template-columns:1.18fr .82fr;gap:.9rem;align-items:stretch;">
-      <div class="panel reveal" style="padding:1rem 1.1rem;">
-        <div style="display:grid;gap:.78rem;">
-          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
-            <div class="metric" style="font-size:1.65rem;">1000</div>
-            <div><b style="color:var(--ink);">собственных расчётов ANSYS</b><div class="note">пять физических постановок</div></div>
-          </div>
-          <div style="height:1px;background:var(--line);"></div>
-          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
-            <div class="metric" style="font-size:1.38rem;color:var(--teal);">GPR</div>
-            <div><b style="color:var(--ink);">для гладких откликов и малых выборок</b><div class="note">R² до 0,99</div></div>
-          </div>
-          <div style="height:1px;background:var(--line);"></div>
-          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
-            <div class="metric" style="font-size:1.18rem;color:var(--brick);">CatBoost</div>
-            <div><b style="color:var(--ink);">для резкого резонансного отклика</b><div class="note">0,61 против 0,45 у GPR</div></div>
-          </div>
-          <div style="height:1px;background:var(--line);"></div>
-          <div style="display:grid;grid-template-columns:92px 1fr;gap:.8rem;align-items:center;">
-            <div class="metric" style="font-size:1.35rem;color:var(--navy);">Open</div>
-            <div><b style="color:var(--ink);">код, данные, тесты и демо</b><div class="note">проект можно запустить и перепроверить</div></div>
-          </div>
-        </div>
+<div class="slide" data-slide="12" data-criteria="Продуктовое мышление">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Материалы</span></div>
+  <div class="content" style="text-align:center;">
+    <h2 class="big-title reveal" style="font-size:clamp(1.9rem,4vw,3.2rem);">Материалы проекта</h2>
+    <div class="rule reveal" style="margin:.6rem auto .8rem;"></div>
+    <p class="reveal" style="max-width:62ch;margin:0 auto .75rem;font-size:.9rem;">Репозиторий с кодом, данными и README, а также запись работы приложения на реальных данных ANSYS.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;max-width:760px;margin:0 auto;">
+      <div class="panel qr reveal" style="padding:.7rem;">
+        <div class="kicker">README · GitHub</div>
+        <div style="margin-top:.25rem;color:var(--ink);font-weight:700;font-size:.82rem;">Код, данные, метрики, docker compose</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR README" style="margin-top:.45rem;">
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;align-content:start;">
-        <div class="panel t-teal reveal" style="padding:.72rem;text-align:center;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark" alt="QR репозитория" style="width:128px;height:128px;border-radius:5px;background:#fff;">
-          <div class="kicker" style="margin-top:.42rem;">Репозиторий</div>
-        </div>
-        <div class="panel t-navy reveal" style="padding:.72rem;text-align:center;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=https%3A%2F%2Fgithub.com%2Falexandersavintsev%2Ffea-surrogate-benchmark%2Fblob%2Fmain%2Fdocs%2Fproject_description.md" alt="QR описания проекта" style="width:128px;height:128px;border-radius:5px;background:#fff;">
-          <div class="kicker" style="margin-top:.42rem;">Описание</div>
-        </div>
-        <div class="panel t-brick reveal" style="grid-column:1 / -1;padding:.78rem 1rem;">
-          <div class="kicker">Следующий шаг</div>
-          <div style="font-weight:800;color:var(--ink);margin-top:.35rem;">Проверить правило на контакте и потере устойчивости</div>
-        </div>
-      </div>
+      <a class="panel qr reveal" href="https://cloud.mail.ru/public/Njbo/Cb9JHuehu" target="_blank" rel="noopener noreferrer" style="padding:.7rem;text-decoration:none;color:inherit;">
+        <div class="kicker">Видео-демо</div>
+        <div style="margin-top:.25rem;color:var(--ink);font-weight:700;font-size:.82rem;">1:28 · живой пересчёт на данных ANSYS</div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=10&data=https%3A%2F%2Fcloud.mail.ru%2Fpublic%2FNjbo%2FCb9JHuehu" alt="QR видео-демо" style="margin-top:.45rem;">
+      </a>
     </div>
-    <div class="panel reveal" style="margin-top:.7rem;padding:.65rem 1rem;text-align:center;font-size:.92rem;font-weight:800;color:var(--ink);">
-      Суррогат выбирается по форме физического отклика, а финальный вариант проверяется полным расчётом.
+    <div class="panel reveal" style="margin:.65rem auto 0;max-width:900px;padding:.65rem .8rem;border-left:3px solid var(--teal);text-align:left;font-size:.79rem;line-height:1.45;">
+      <div><b style="color:var(--ink);">Ранняя проверка:</b> проект обсуждён с руководителем ВКР и инженером-расчётчиком кафедры.</div>
+      <div style="margin-top:.45rem;"><b style="color:var(--ink);">Дальше:</b> проверка сервиса с 3-5 расчётчиками, переход от скалярного отклика к полю и перенос на отечественные решатели.</div>
     </div>
   </div>
-</div></div>
+</div>
+
+</div>
 
 <div class="nav">
   <div class="timer" id="timerBox"><span class="tdot"></span><span id="countdown">10:00</span></div>
