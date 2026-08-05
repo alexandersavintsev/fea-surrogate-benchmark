@@ -287,50 +287,49 @@
   </div>
 </div>
 <!-- 6 -->
-<div class="slide" data-slide="6">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Методика сравнения</span></div>
-  <div class="glow" style="width:380px;height:380px;bottom:-120px;left:-100px;background:var(--navy);opacity:.06"></div>
+<div class="slide" data-slide="6" data-criteria="Data Science · Разработка и инженерия">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Метрики</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Сравнение устроено одинаково для всех моделей</h2>
+    <h2 class="section-title reveal">Метрики и протокол проверки</h2>
     <div class="rule reveal"></div>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem;">
-      <div class="panel t-navy reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">01</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Одинаковые данные</div>
-        <div class="note" style="margin-top:.3rem;">Единые выборки, признаки и целевые переменные.</div>
+    <div class="panel reveal" style="padding:.65rem .85rem;margin-bottom:.65rem;font-size:.88rem;">
+      Одни и те же разбиения для всех моделей: <b>5 задач × 8 моделей × 5 фолдов × 3 random seed = 600 базовых оценок качества.</b>
+    </div>
+    <div class="grid2" style="grid-template-columns:1.08fr .92fr;">
+      <div class="panel t-teal reveal" style="padding:.85rem;">
+        <div class="kicker">Четыре взгляда на ошибку</div>
+        <table class="t compact" style="margin-top:.35rem;">
+          <thead><tr><th>Метрика</th><th>Что показывает</th><th>Лучше</th></tr></thead>
+          <tbody>
+            <tr><td><b>R²</b></td><td>Насколько модель объясняет изменение отклика</td><td>к 1</td></tr>
+            <tr><td><b>MAE</b></td><td>Средний промах в МПа, мм или единицах деформации</td><td>меньше</td></tr>
+            <tr><td><b>RMSE</b></td><td>Отдельно подсвечивает крупные ошибки</td><td>меньше</td></tr>
+            <tr><td><b>MAPE</b></td><td>Относительный промах в процентах</td><td>меньше</td></tr>
+          </tbody>
+        </table>
+        <div class="panel" style="margin-top:.62rem;padding:.62rem .72rem;border-left:3px solid var(--brick);">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:baseline;"><b>Контроль механизма</b><span class="metric" style="font-size:1.25rem;color:var(--brick);">5 функций</span></div>
+          <div class="note" style="margin-top:.2rem;">Пять синтетических функций с заранее известной гладкостью.</div>
+        </div>
       </div>
-      <div class="panel t-teal reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">02</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">5 блоков × 3 seed</div>
-        <div class="note" style="margin-top:.3rem;">Оценка не зависит от одного удачного разбиения.</div>
-      </div>
-      <div class="panel reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">03</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Четыре метрики</div>
-        <div class="note" style="margin-top:.3rem;">R², MAE, RMSE и MAPE вместо одной удобной цифры.</div>
-      </div>
-      <div class="panel reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">04</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Optuna для деревьев</div>
-        <div class="note" style="margin-top:.3rem;">Параметры ансамблей подобраны байесовской оптимизацией.</div>
-      </div>
-      <div class="panel t-teal reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">05</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Настройка GPR</div>
-        <div class="note" style="margin-top:.3rem;">Параметры ядра оцениваются по максимальному правдоподобию.</div>
-      </div>
-      <div class="panel t-brick reveal" style="padding:.9rem;">
-        <div class="metric" style="font-size:1.35rem;">06</div>
-        <div style="font-weight:800; color:var(--ink); margin-top:.35rem;">Контроль механизма</div>
-        <div class="note" style="margin-top:.3rem;">Пять синтетических функций с заранее известной гладкостью.</div>
+      <div style="display:grid;gap:.55rem;align-content:start;">
+        <div class="panel t-navy reveal" style="padding:.7rem .8rem;">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:baseline;"><b>Честность сравнения</b><span class="metric" style="font-size:1.35rem;">8 × 5</span></div>
+          <div class="note" style="margin-top:.2rem;">Все 8 моделей получают одинаковые обучающие и тестовые части каждой задачи.</div>
+        </div>
+        <div class="panel t-teal reveal" style="padding:.7rem .8rem;">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:baseline;"><b>Устойчивость оценки</b><span class="metric" style="font-size:1.35rem;">5 × 3 = 15</span></div>
+          <div class="note" style="margin-top:.2rem;">Пять тестовых блоков и три варианта случайного разбиения для каждой пары «модель - задача».</div>
+        </div>
+        <div class="panel t-brick reveal" style="padding:.7rem .8rem;">
+          <div style="display:flex;justify-content:space-between;gap:1rem;align-items:baseline;"><b>Настройка ансамблей</b><span class="metric" style="font-size:1.35rem;">5 моделей</span></div>
+          <div class="note" style="margin-top:.2rem;">Random Forest и четыре бустинга настроены через Optuna, чтобы сравнение не зависело от дефолтных параметров.</div>
+        </div>
       </div>
     </div>
-    <div class="panel reveal" style="margin-top:.8rem; padding:.72rem 1rem; border-left:3px solid var(--teal); font-size:.9rem;">
-      Такая схема отделяет физическую закономерность от случайного разбиения или недонастроенной модели.
-    </div>
+    <div class="panel reveal" style="margin-top:.65rem;padding:.55rem .8rem;text-align:center;font-size:.76rem;"><b>Основная метрика: R².</b> MAE и RMSE контролируют величину инженерной ошибки, MAPE используется как дополнительная относительная оценка.</div>
   </div>
 </div>
-
 <!-- 7 -->
 <div class="slide" data-slide="7">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Находка</span></div>
