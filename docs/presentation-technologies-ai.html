@@ -416,16 +416,19 @@
     <h2 class="section-title reveal">Демо: от CSV к сравнению моделей</h2>
     <div class="rule reveal"></div>
     <div style="display:grid; grid-template-columns:1.55fr .75fr; gap:.9rem; align-items:stretch;">
-      <div class="panel reveal" style="padding:.55rem; overflow:hidden;">
-        <img src="figs/streamlit_demo.png" alt="Интерфейс Streamlit-демо" style="display:block; width:100%; height:300px; object-fit:cover; object-position:top; border-radius:6px;">
+      <div class="panel reveal" style="padding:.55rem; overflow:hidden; background:#111827;">
+        <video controls playsinline preload="metadata" poster="figs/streamlit_demo_jmlc_final.png" style="display:block; width:100%; height:300px; object-fit:contain; background:#111827; border-radius:6px;">
+          <source src="media/demo-jmlc.mp4" type="video/mp4">
+          Браузер не поддерживает встроенное видео. <a href="https://cloud.mail.ru/public/Njbo/Cb9JHuehu" target="_blank" rel="noopener noreferrer">Открыть резервную запись</a>.
+        </video>
       </div>
       <div class="panel t-teal reveal" style="padding:1rem;">
-        <div class="kicker">Live · 60-90 секунд</div>
+        <div class="kicker">Видео-демо · 1:28</div>
         <div style="display:grid; gap:.68rem; margin-top:.75rem;">
-          <div><b style="color:var(--teal);">01</b> Загружаю CSV расчётов ANSYS.</div>
-          <div><b style="color:var(--teal);">02</b> Выбираю целевую величину.</div>
-          <div><b style="color:var(--teal);">03</b> Запускаю k-fold сравнение.</div>
-          <div><b style="color:var(--brick);">04</b> Получаю таблицу, график и лидера.</div>
+          <div><b style="color:var(--teal);">01</b> Выбираю расчёты ANSYS.</div>
+          <div><b style="color:var(--teal);">02</b> Запускаю выбранные модели.</div>
+          <div><b style="color:var(--teal);">03</b> Получаю четыре метрики.</div>
+          <div><b style="color:var(--brick);">04</b> Проверяю смену лидера.</div>
         </div>
       </div>
     </div>
@@ -471,8 +474,14 @@
         <div class="panel" style="padding:.72rem;"><b>Переобучение суррогата</b></div>
       </div>
     </div>
-    <div class="panel reveal" style="margin-top:.72rem;padding:.65rem 1rem;text-align:center;font-size:.89rem;">
-      Проверяется применимость прогноза к конкретному кандидату, а не только средняя точность модели.
+    <div class="panel reveal" style="margin-top:.72rem;padding:.62rem .9rem;">
+      <div class="kicker">Управляемые риски</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.34rem 1rem;margin-top:.38rem;font-size:.78rem;line-height:1.35;">
+        <div><b style="color:var(--ink);">Переобучение:</b> 5-fold CV × 3 seed.</div>
+        <div><b style="color:var(--ink);">Экстраполяция:</b> прогноз только внутри DOE.</div>
+        <div><b style="color:var(--ink);">Нефизичный прогноз:</b> формулы + ANSYS.</div>
+        <div><b style="color:var(--ink);">Резонансный пик:</b> дополнительные точки у пика.</div>
+      </div>
     </div>
   </div>
 </div>
