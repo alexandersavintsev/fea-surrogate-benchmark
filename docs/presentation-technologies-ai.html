@@ -158,7 +158,7 @@
 
 <!-- 2 -->
 <div class="slide" data-slide="2" data-criteria="Продуктовое мышление">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 12 · Проблема</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 13 · Проблема</span></div>
   <div class="content">
     <h2 class="section-title reveal">Проблема</h2>
     <div class="rule reveal" style="background:var(--brick);"></div>
@@ -189,7 +189,7 @@
 </div>
 <!-- 3 -->
 <div class="slide" data-slide="3" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 12 · Цель и задачи</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 13 · Цель и задачи</span></div>
   <div class="content">
     <h2 class="section-title reveal">Цель и задачи проекта</h2>
     <div class="rule reveal"></div>
@@ -224,7 +224,7 @@
 
 <!-- 4 -->
 <div class="slide" data-slide="4" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Продукт и решение</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 13 · Продукт и решение</span></div>
   <div class="content">
     <h2 class="section-title reveal">Продукт и решение</h2>
     <div class="rule reveal"></div>
@@ -259,7 +259,7 @@
 </div>
 <!-- 5 -->
 <div class="slide" data-slide="5" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Специфика данных</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 13 · Специфика данных</span></div>
   <div class="content">
     <h2 class="section-title reveal">Специфика данных</h2>
     <div class="rule reveal"></div>
@@ -288,7 +288,7 @@
 </div>
 <!-- 6 -->
 <div class="slide" data-slide="6" data-criteria="Data Science · Разработка и инженерия">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Метрики</span></div>
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 13 · Метрики</span></div>
   <div class="content">
     <h2 class="section-title reveal">Метрики и протокол проверки</h2>
     <div class="rule reveal"></div>
@@ -331,42 +331,46 @@
   </div>
 </div>
 <!-- 7 -->
-<div class="slide" data-slide="7">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 12 · Находка</span></div>
-  <div class="glow" style="width:400px;height:400px;top:-120px;right:-110px;background:var(--brick);opacity:.08"></div>
+<div class="slide" data-slide="7" data-criteria="Data Science">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>07 / 13 · Результат</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Находка: лидер меняется по гладкости</h2>
-    <div class="rule reveal" style="background:linear-gradient(90deg,var(--teal),var(--brick)); width:110px;"></div>
-    <div class="panel reveal" style="padding:.6rem .9rem; margin-bottom:.7rem; font-size:.86rem;">R² по k-блочной кросс-валидации, 5 блоков × 3 сида. Деревья настроены Optuna, GPR самонастраивается по правдоподобию ядра - сравнение честное.</div>
-    <div class="grid2">
-      <div class="panel reveal" style="padding:.9rem;">
-        <table class="t compact">
-          <thead><tr><th>Задача</th><th>GPR</th><th>Бустинг</th><th>Лидер</th></tr></thead>
-          <tbody>
-            <tr><td>Кирш, 100 точек</td><td class="w-gpr">1,00</td><td class="num">0,98</td><td class="w-gpr">GPR</td></tr>
-            <tr><td>Кирш, 30 точек</td><td class="w-gpr">0,99</td><td class="num">≤ 0,86</td><td class="w-gpr">GPR</td></tr>
-            <tr><td>Консоль, 80 точек</td><td class="w-gpr">0,99</td><td class="num">0,84</td><td class="w-gpr">GPR</td></tr>
-            <tr><td>Консоль, 240 точек</td><td class="w-gpr">0,90</td><td class="num">0,83</td><td class="w-gpr">GPR</td></tr>
-            <tr><td>Пластичность, 200</td><td class="w-gpr">0,99</td><td class="num">0,85</td><td class="w-gpr">GPR</td></tr>
-            <tr><td>Консоль, 120 (экстрим)</td><td class="num">0,76</td><td class="w-boost">0,88</td><td class="w-boost">бустинг</td></tr>
-            <tr><td>Резонанс, 200</td><td class="num">0,45</td><td class="w-boost">0,61</td><td class="w-boost">CatBoost</td></tr>
-          </tbody>
-        </table>
+    <h2 class="section-title reveal">Результат: карта выбора модели</h2>
+    <div class="rule reveal"></div>
+    <div class="figure-frame reveal" style="height:355px;padding:.25rem;">
+      <img src="figs/all_models_heatmap.png" alt="Тепловая карта R-квадрат всех восьми моделей на пяти задачах">
+    </div>
+    <div class="grid3 reveal" style="margin-top:.6rem;">
+      <div class="panel t-teal" style="padding:.65rem;"><div class="kicker">GPR · гладкий отклик</div><div class="note" style="margin-top:.25rem;">Кирш <b style="color:var(--ink);">0,9999</b>; упругий изгиб <b style="color:var(--ink);">0,9911</b>; пластичность <b style="color:var(--ink);">0,9910</b>.</div></div>
+      <div class="panel t-brick" style="padding:.65rem;"><div class="kicker">CatBoost · резкий отклик</div><div class="note" style="margin-top:.25rem;">Экстрим <b style="color:var(--ink);">0,8757</b> против 0,7609; резонанс <b style="color:var(--ink);">0,6085</b> против 0,4541.</div></div>
+      <div class="panel t-navy" style="padding:.65rem;"><div class="kicker">Что это даёт</div><div class="note" style="margin-top:.25rem;"><b style="color:var(--ink);">5 задач, 2 лидера, 1 правило:</b> модель выбирается по характеру физического отклика.</div></div>
+    </div>
+  </div>
+</div>
+<!-- 8 -->
+<div class="slide" data-slide="8" data-criteria="Продуктовое мышление · Разработка и инженерия">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 13 · Демо</span></div>
+  <div class="content">
+    <h2 class="section-title reveal">Демо: тот же эксперимент без командной строки</h2>
+    <div class="rule reveal"></div>
+    <div class="grid2" style="grid-template-columns:1.25fr .75fr;">
+      <div class="figure-frame reveal" style="height:410px;background:#111827;padding:.35rem;">
+        <video controls playsinline preload="metadata" poster="figs/streamlit_demo_jmlc_final.png" style="display:block;width:100%;height:100%;object-fit:contain;background:#111827;border-radius:7px;">
+          <source src="media/demo-jmlc.mp4" type="video/mp4">
+          Браузер не поддерживает встроенное видео. <a href="https://cloud.mail.ru/public/Njbo/Cb9JHuehu" target="_blank" rel="noopener noreferrer">Открыть резервную запись</a>.
+        </video>
       </div>
-      <div style="display:grid; gap:.6rem; align-content:start;">
-        <img src="figs/fig_crossover.png" alt="Кроссовер GPR против градиентного бустинга" class="reveal" style="width:100%; border:1px solid var(--line); border-radius:8px; background:#fff;">
-        <div class="panel reveal" style="padding:.75rem .95rem; border-left:3px solid var(--brick);">
-          <div style="font-weight:700; color:var(--ink); font-size:.9rem;">Что это меняет на практике</div>
-          <div class="note" style="margin-top:.25rem;">Тип данных сам по себе не определяет лидера. На малых выборках решающим фактором оказалась <b style="color:var(--ink);">гладкость физического отклика</b>: GPR лидирует на гладких задачах, а бустинг выходит вперёд при резкой нелинейности.</div>
-        </div>
+      <div style="display:grid;gap:.65rem;align-content:start;">
+        <div class="panel t-teal reveal" style="padding:.8rem;"><div class="kicker">01 · Данные</div><div class="note" style="margin-top:.3rem;">Выбрать реальный набор расчётов ANSYS.</div></div>
+        <div class="panel t-teal reveal" style="padding:.8rem;"><div class="kicker">02 · Модели</div><div class="note" style="margin-top:.3rem;">Запустить сравнение выбранных моделей.</div></div>
+        <div class="panel t-brick reveal" style="padding:.8rem;"><div class="kicker">03 · Результат</div><div class="note" style="margin-top:.3rem;">Получить R², MAE, RMSE, MAPE и увидеть лидера.</div></div>
+        <div class="panel reveal" style="padding:.7rem;font-size:.78rem;line-height:1.5;"><b style="color:var(--ink);">Полный режим:</b> 8 моделей × 5 фолдов × 3 seed.<br><b style="color:var(--ink);">Демо-режим:</b> выбранные модели × 5 фолдов × 1 seed, чтобы не ждать полный прогон.</div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- 8 -->
-<div class="slide" data-slide="8">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>08 / 12 · Оригинальность</span></div>
+<!-- 9 -->
+<div class="slide" data-slide="9">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 13 · Оригинальность</span></div>
   <div class="glow" style="width:360px;height:360px;bottom:-100px;right:-80px;background:var(--teal);opacity:.07"></div>
   <div class="content">
     <h2 class="section-title reveal">Контрольный эксперимент подтвердил: дело в форме отклика</h2>
@@ -397,9 +401,9 @@
   </div>
 </div>
 
-<!-- 9 -->
-<div class="slide" data-slide="9">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 12 · Демо</span></div>
+<!-- 10 -->
+<div class="slide" data-slide="10">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 13 · Демо</span></div>
   <div class="glow" style="width:430px;height:430px;top:-130px;right:-100px;background:var(--teal);opacity:.07"></div>
   <div class="content">
     <h2 class="section-title reveal">Демо: от CSV к сравнению моделей</h2>
@@ -427,9 +431,9 @@
   </div>
 </div>
 
-<!-- 10 -->
-<div class="slide" data-slide="10">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 12 · Проверка результата</span></div>
+<!-- 11 -->
+<div class="slide" data-slide="11">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 13 · Проверка результата</span></div>
   <div class="glow" style="width:390px;height:390px;bottom:-120px;left:-90px;background:var(--brick);opacity:.06"></div>
   <div class="content">
     <h2 class="section-title reveal">Что именно проверяется после прогноза суррогата</h2>
@@ -475,9 +479,9 @@
   </div>
 </div>
 
-<!-- 11 -->
-<div class="slide" data-slide="11">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>11 / 12 · Технологии и воспроизводимость</span></div>
+<!-- 12 -->
+<div class="slide" data-slide="12">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 13 · Технологии и воспроизводимость</span></div>
   <div class="glow" style="width:390px;height:390px;top:-120px;right:-90px;background:var(--navy);opacity:.06"></div>
   <div class="content">
     <h2 class="section-title reveal">Весь путь воспроизводится: от APDL до демо</h2>
@@ -516,9 +520,9 @@
   </div>
 </div>
 
-<!-- 12 -->
-<div class="slide" data-slide="12">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>12 / 12 · Итог и материалы</span></div>
+<!-- 13 -->
+<div class="slide" data-slide="13">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>13 / 13 · Итог и материалы</span></div>
   <div class="glow" style="width:430px;height:430px;top:-140px;right:-110px;background:var(--teal);opacity:.08"></div>
   <div class="content">
     <h2 class="section-title reveal">Результат - не «лучшая модель», а правило выбора</h2>
@@ -573,7 +577,7 @@
   <button class="nav-btn" onclick="changeSlide(-1)" aria-label="Назад">&#8249;</button>
   <div class="dots" id="dots"></div>
   <button class="nav-btn" onclick="changeSlide(1)" aria-label="Вперёд">&#8250;</button>
-  <span class="counter" id="counter">1 / 12</span>
+  <span class="counter" id="counter">1 / 13</span>
 </div>
 
 <script>
