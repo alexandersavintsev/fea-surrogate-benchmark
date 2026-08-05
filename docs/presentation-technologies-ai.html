@@ -369,38 +369,38 @@
   </div>
 </div>
 <!-- 9 -->
-<div class="slide" data-slide="9">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 13 · Оригинальность</span></div>
-  <div class="glow" style="width:360px;height:360px;bottom:-100px;right:-80px;background:var(--teal);opacity:.07"></div>
+<div class="slide" data-slide="9" data-criteria="Data Science · Разработка и инженерия">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>09 / 13 · Технологическая новизна</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Контрольный эксперимент подтвердил: дело в форме отклика</h2>
+    <h2 class="section-title reveal">Технологическая новизна</h2>
     <div class="rule reveal"></div>
-    <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:.9rem;align-items:stretch;">
-      <div class="panel reveal" style="padding:.5rem;">
-        <img src="figs/synthetic_functions.png" alt="Синтетические функции с контролируемой гладкостью" style="display:block;width:100%;height:270px;object-fit:contain;border-radius:6px;background:#fff;">
-        <div class="note" style="padding:.35rem .45rem .05rem;">Пять функций по 400 точек: меняется только гладкость, остальные условия контролируются.</div>
-      </div>
-      <div style="display:grid;gap:.58rem;">
-        <div class="panel t-teal reveal" style="padding:.7rem .85rem;">
-          <div class="kicker">Наблюдение в ANSYS</div>
-          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">GPR лидирует на плавных откликах</div>
-        </div>
-        <div class="panel t-navy reveal" style="padding:.7rem .85rem;">
-          <div class="kicker">Смена лидера</div>
-          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">CatBoost выигрывает на остром резонансном пике</div>
-        </div>
-        <div class="panel t-brick reveal" style="padding:.7rem .85rem;">
-          <div class="kicker">Контроль</div>
-          <div style="margin-top:.3rem;font-weight:800;color:var(--ink);">Тот же переход повторился на синтетических функциях</div>
-        </div>
-      </div>
+    <div class="grid3">
+      <div class="panel t-teal reveal" style="padding:.7rem;"><div class="kicker">01 · Контролируемое усложнение</div><div class="note" style="margin-top:.3rem;">Одна механическая база последовательно доведена от гладкого отклика до резонанса.</div></div>
+      <div class="panel t-teal reveal" style="padding:.7rem;"><div class="kicker">02 · Неподтвердившаяся гипотеза</div><div class="note" style="margin-top:.3rem;">Пластичность не сменила лидера: GPR 0,99 против CatBoost 0,85. CatBoost вышел вперёд только на резонансе: 0,61 против 0,45.</div></div>
+      <div class="panel t-brick reveal" style="padding:.7rem;"><div class="kicker">03 · Проверка механизма</div><div class="note" style="margin-top:.3rem;">Та же смена лидера повторилась на пяти функциях с контролируемой гладкостью.</div></div>
     </div>
-    <div class="panel reveal" style="margin-top:.72rem;padding:.72rem 1rem;border-left:3px solid var(--teal);font-size:.9rem;line-height:1.5;">
-      <b style="color:var(--ink);">Оригинальность проекта:</b> получено проверяемое правило выбора суррогата. Для гладкого отклика и малой выборки подходит GPR, для резкого пика преимущество получает бустинг.
+    <div class="grid2 reveal" style="grid-template-columns:1.08fr .92fr;margin-top:.75rem;">
+      <div>
+        <div class="kicker">Что уже можно оптимизировать на этих данных</div>
+        <div class="panel" style="margin-top:.35rem;padding:.3rem .8rem;">
+          <table class="t compact">
+            <thead><tr><th>Отклик</th><th>Применение</th></tr></thead>
+            <tbody>
+              <tr><td>Максимальное напряжение</td><td>Проверка прочности</td></tr>
+              <tr><td>Прогиб свободного конца</td><td>Ограничение жёсткости</td></tr>
+              <tr><td>Площадь конструкции</td><td>Минимизация материала</td></tr>
+              <tr><td>Пластическая деформация</td><td>Контроль необратимости</td></tr>
+              <tr><td>Амплитуда колебаний</td><td>Обход резонанса</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="figure-frame" style="height:260px;padding:.35rem;">
+        <img src="figs/fig_crossover.png" alt="Переход лидерства от GPR к градиентному бустингу на задачах разной гладкости">
+      </div>
     </div>
   </div>
 </div>
-
 <!-- 10 -->
 <div class="slide" data-slide="10">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>10 / 13 · Демо</span></div>
