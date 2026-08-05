@@ -146,156 +146,135 @@
 </div>
 
 <!-- 2 -->
-<div class="slide" data-slide="2">
+<div class="slide" data-slide="2" data-criteria="Продуктовое мышление">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>02 / 12 · Проблема</span></div>
-  <div class="glow" style="width:400px;height:400px;top:-120px;right:-100px;background:var(--brick);opacity:.07"></div>
   <div class="content">
-    <h2 class="section-title reveal">Один расчёт терпим. Сотни расчётов - уже проблема</h2>
+    <h2 class="section-title reveal">Проблема</h2>
     <div class="rule reveal" style="background:var(--brick);"></div>
-    <div style="display:grid; grid-template-columns:.82fr 1.18fr; gap:1rem; align-items:stretch;">
-      <div class="panel t-brick reveal" style="padding:1.1rem;">
-        <p style="font-size:1rem; line-height:1.62; margin:0;">
-          Один расчёт ANSYS занимает секунды или минуты. Параметрическое исследование и оптимизация требуют сотен запусков, поэтому перебор растягивается на часы.
-        </p>
-        <div style="margin-top:1rem; display:grid; gap:.58rem;">
-          <div><b style="color:var(--ink);">12,9 с</b> - средний расчёт ANSYS в контрольном замере.</div>
-          <div><b style="color:var(--teal);">0,00486 с</b> - прогноз обученного GPR.</div>
-          <div><b style="color:var(--brick);">×2653</b> - измеренное ускорение одного отклика.</div>
+    <div class="grid2">
+      <div class="panel t-brick reveal" style="padding:1rem;">
+        <p style="font-size:.96rem;line-height:1.55;margin:0;">Инженер-расчётчик подбирает геометрию и нагрузку перебором. Один расчёт в ANSYS занимает от секунд до минут, а параметрическое исследование требует <b style="color:var(--ink);">сотен и тысяч запусков</b>. Перебор растягивается на часы и сутки, вариантов проверяется меньше, чем нужно, а оптимум часто ищется вручную.</p>
+        <div style="margin-top:.8rem;display:flex;flex-wrap:wrap;gap:.4rem;">
+          <span class="tag">Долгий перебор</span>
+          <span class="tag">Мало проверенных вариантов</span>
+          <span class="tag">Риск пропустить оптимум</span>
         </div>
+        <div class="panel" style="margin-top:.75rem;padding:.65rem;border-left:3px solid var(--brick);font-size:.82rem;line-height:1.45;"><b style="color:var(--ink);">Задача:</b> ускорить массовую оценку вариантов, не выдавая ML-прогноз за окончательный инженерный расчёт.</div>
       </div>
-      <div class="panel reveal" style="padding:.55rem;">
-        <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени ANSYS и GPR" style="display:block;width:100%;height:286px;object-fit:contain;border-radius:6px;background:#fff;">
+      <div class="panel t-navy reveal" style="padding:1rem;">
+        <div class="kicker">Измерение в проекте</div>
+        <div class="figure-frame" style="height:215px;margin-top:.45rem;">
+          <img src="figs/ansys_vs_surrogate_time.png" alt="Сравнение времени расчёта ANSYS и прогноза GPR">
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.65rem;text-align:center;">
+          <div><div class="metric" style="font-size:1.55rem;">12,9 с</div><div class="note">ANSYS</div></div>
+          <div><div class="metric" style="font-size:1.55rem;">0,00486 с</div><div class="note">GPR</div></div>
+          <div><div class="metric" style="font-size:1.55rem;color:var(--brick);">≈2650×</div><div class="note">ускорение</div></div>
+        </div>
+        <div class="panel" style="margin-top:.65rem;padding:.6rem;border-left:3px solid var(--teal);font-size:.8rem;line-height:1.4;">Скорость суррогат даёт. Открытый вопрос проекта - <b style="color:var(--ink);">какую модель выбирать для разной физики</b>.</div>
       </div>
-    </div>
-    <div class="panel reveal" style="margin-top:.8rem; padding:.72rem 1rem; border-left:3px solid var(--teal); font-size:.91rem;">
-      Суррогат закрывает вопрос скорости. Открытым остаётся вопрос - <b style="color:var(--ink);">какую именно модель брать для конкретного физического отклика</b>.
     </div>
   </div>
 </div>
-
 <!-- 3 -->
-<div class="slide" data-slide="3">
+<div class="slide" data-slide="3" data-criteria="Data Science · Разработка и инженерия">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>03 / 12 · Цель и задачи</span></div>
-  <div class="glow" style="width:420px;height:420px;top:-130px;right:-100px;background:var(--teal);opacity:.07"></div>
   <div class="content">
     <h2 class="section-title reveal">Цель и задачи проекта</h2>
     <div class="rule reveal"></div>
-    <div class="grid2">
-      <div class="panel t-teal reveal" style="padding:1.2rem;">
-        <div class="kicker">Цель</div>
-        <p style="margin:.65rem 0 0; font-size:1.08rem; line-height:1.65;">
-          Сократить число дорогих конечно-элементных расчётов с помощью ML-суррогата и определить,
-          <b style="color:var(--ink);">какую регрессионную модель выбирать</b>
-          для разных типов физического отклика.
-        </p>
-        <div style="height:1px; background:var(--line); margin:1rem 0;"></div>
-        <div style="font-size:.9rem; line-height:1.55; color:var(--navy); font-weight:700;">
-          Критерий успеха: быстрый отклик за миллисекунды, воспроизводимая оценка качества и обязательная проверка итогового решения полным расчётом.
-        </div>
+    <div class="panel t-teal reveal" style="padding:.78rem 1rem;margin-bottom:.7rem;border-left:3px solid var(--teal);">
+      <div class="kicker">Цель</div>
+      <div style="margin-top:.3rem;font-size:.94rem;line-height:1.5;font-weight:750;color:var(--ink);">Экспериментально построить правило выбора регрессионной модели по характеру физического отклика.</div>
+    </div>
+    <div class="grid2" style="gap:.7rem;">
+      <div class="panel t-navy reveal" style="padding:.82rem;">
+        <div class="metric" style="font-size:1.25rem;">01</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.28rem;">Собственные данные</div>
+        <div class="note" style="margin-top:.28rem;line-height:1.45;">Получить 1000 расчётов ANSYS для пяти постановок: от гладкого отклика до резонансного пика.</div>
       </div>
-      <div class="panel reveal" style="padding:1.05rem 1.15rem;">
-        <div class="kicker">Задачи</div>
-        <div style="display:grid; gap:.72rem; margin-top:.75rem;">
-          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
-            <div class="metric" style="font-size:1.2rem; color:var(--teal);">01</div>
-            <div style="font-size:.91rem; line-height:1.5;">Сформировать собственные выборки на задачах с разной гладкостью отклика.</div>
-          </div>
-          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
-            <div class="metric" style="font-size:1.2rem; color:var(--teal);">02</div>
-            <div style="font-size:.91rem; line-height:1.5;">Сравнить 8 моделей по единой схеме кросс-валидации и настроить ансамбли деревьев.</div>
-          </div>
-          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
-            <div class="metric" style="font-size:1.2rem; color:var(--teal);">03</div>
-            <div style="font-size:.91rem; line-height:1.5;">Найти границу, на которой лидер меняется между GPR и градиентным бустингом.</div>
-          </div>
-          <div style="display:grid; grid-template-columns:34px 1fr; gap:.65rem; align-items:start;">
-            <div class="metric" style="font-size:1.2rem; color:var(--brick);">04</div>
-            <div style="font-size:.91rem; line-height:1.5;">Оформить результат как открытый воспроизводимый инструмент для инженера.</div>
-          </div>
-        </div>
+      <div class="panel t-teal reveal" style="padding:.82rem;">
+        <div class="metric" style="font-size:1.25rem;">02</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.28rem;">Единый эксперимент</div>
+        <div class="note" style="margin-top:.28rem;line-height:1.45;">Сравнить 8 моделей: 5 фолдов × 3 seed, четыре метрики и Optuna для ансамблей деревьев.</div>
+      </div>
+      <div class="panel t-teal reveal" style="padding:.82rem;">
+        <div class="metric" style="font-size:1.25rem;">03</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.28rem;">Проверка гипотезы</div>
+        <div class="note" style="margin-top:.28rem;line-height:1.45;">Сопоставить GPR, который использует гладкость, и ансамбли деревьев, которые строят локальные разбиения. Найти точку смены лидера.</div>
+      </div>
+      <div class="panel t-brick reveal" style="padding:.82rem;">
+        <div class="metric" style="font-size:1.25rem;color:var(--brick);">04</div>
+        <div style="font-weight:800;color:var(--ink);margin-top:.28rem;">Воспроизводимый результат</div>
+        <div class="note" style="margin-top:.28rem;line-height:1.45;">Оформить методику как бенчмарк с кодом, метриками и интерактивным демо для инженера.</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- 4 -->
-<div class="slide" data-slide="4">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Физические отклики</span></div>
-  <div class="glow" style="width:390px;height:390px;top:-120px;right:-90px;background:var(--brick);opacity:.07"></div>
+<div class="slide" data-slide="4" data-criteria="Data Science · Разработка и инженерия">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>04 / 12 · Описание проекта</span></div>
   <div class="content">
-    <h2 class="section-title reveal">Три физических режима в одном стиле</h2>
-    <div class="rule reveal" style="background:linear-gradient(90deg,var(--teal),var(--brick));width:110px;"></div>
-    <div class="grid3">
-      <div class="panel t-teal reveal" style="padding:.48rem;">
-        <img src="figs/kirsch_b_slice.png" alt="График зависимости напряжения от полуоси отверстия в задаче Кирша" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
-        <div style="padding:.48rem .45rem .35rem;">
-          <div class="kicker">Гладкий отклик</div>
-          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Кирш - пластина с отверстием</div>
-          <div class="note" style="margin-top:.28rem;">Три контрольных расчёта: меняется <b>b</b>, а = 10 мм, l<sub>x</sub> = l<sub>y</sub> = 100 мм.</div>
+    <h2 class="section-title reveal">Описание проекта</h2>
+    <div class="rule reveal"></div>
+    <div class="panel reveal" style="margin-bottom:.6rem;padding:.55rem .75rem;border-left:3px solid var(--brick);font-size:.86rem;"><b style="color:var(--ink);">Коротко:</b> воспроизводимый бенчмарк, который помогает выбрать ML-суррогат для серии расчётов ANSYS.</div>
+    <div class="grid2" style="grid-template-columns:.9fr 1.1fr;">
+      <div class="panel t-teal reveal" style="padding:.8rem;">
+        <div class="kicker">Пластина с отверстием</div>
+        <div class="mini-figs" style="height:190px;margin-top:.45rem;">
+          <img src="figs/kirsch_scheme.png" alt="Геометрия пластины с отверстием">
+          <img src="figs/kirsch_stress.png" alt="Поле напряжений около отверстия">
         </div>
+        <div class="note" style="margin-top:.4rem;"><b style="color:var(--ink);">Задача Кирша:</b> предсказать максимальное напряжение и площадь пластины.</div>
       </div>
-      <div class="panel reveal" style="padding:.48rem;border-top:3px solid #b6a36a;">
-        <img src="figs/plastic_threshold.png" alt="График пластической деформации с порогом текучести" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
-        <div style="padding:.48rem .45rem .35rem;">
-          <div class="kicker">Пороговый отклик</div>
-          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Пластичность - предел текучести</div>
-          <div class="note" style="margin-top:.28rem;">200 расчётов: 56% точек перешли в пластическую область.</div>
+      <div class="panel t-navy reveal" style="padding:.8rem;">
+        <div class="kicker">Консольная балка</div>
+        <div class="mini-figs" style="height:190px;margin-top:.45rem;">
+          <img src="figs/cantilever_scheme.png" alt="Схема консольной балки">
+          <img src="figs/cantilever_stress.png" alt="Поле напряжений консольной балки">
+          <img src="figs/plastic_threshold.png" alt="Переход материала в пластическое состояние">
+          <img src="figs/resonance_peak.png" alt="Резонансный пик">
         </div>
-      </div>
-      <div class="panel t-brick reveal" style="padding:.48rem;">
-        <img src="figs/resonance_peak.png" alt="График резонансного пика амплитуды" style="width:100%;height:170px;object-fit:contain;border-radius:6px;background:#fff;">
-        <div style="padding:.48rem .45rem .35rem;">
-          <div class="kicker">Резкий отклик</div>
-          <div style="font-weight:800;color:var(--ink);margin-top:.3rem;">Резонанс - пик около 9 Гц</div>
-          <div class="note" style="margin-top:.28rem;">200 расчётов: разброс амплитуды достигает 66 раз.</div>
-        </div>
+        <div class="note" style="margin-top:.4rem;"><b style="color:var(--ink);">Три режима:</b> упругий изгиб, пластичность после предела текучести и гармонический резонанс.</div>
       </div>
     </div>
-    <div class="panel reveal" style="margin-top:.7rem;padding:.68rem 1rem;border-left:3px solid var(--navy);font-size:.89rem;line-height:1.5;">
-      <b style="color:var(--ink);">Вопрос исследования:</b> в какой момент гладкости уже недостаточно и лидерство переходит от GPR к ансамблям деревьев?
+    <div class="flow reveal" style="margin-top:.65rem;">
+      <div class="panel"><div class="kicker">01 · Постановка</div><div class="note" style="margin-top:.25rem;">Геометрия, материал, нагрузки и нужный физический отклик.</div></div>
+      <div class="panel"><div class="kicker">02 · План</div><div class="note" style="margin-top:.25rem;">LHS равномерно выбирает сочетания параметров.</div></div>
+      <div class="panel"><div class="kicker">03 · Расчёт</div><div class="note" style="margin-top:.25rem;">APDL подставляет параметры и пакетно запускает ANSYS.</div></div>
+      <div class="panel"><div class="kicker">04 · Суррогат</div><div class="note" style="margin-top:.25rem;">Входы и отклики образуют CSV-выборку для ML.</div></div>
     </div>
   </div>
 </div>
-
 <!-- 5 -->
-<div class="slide" data-slide="5">
-  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Данные ANSYS</span></div>
-  <div class="glow" style="width:360px;height:360px;bottom:-110px;right:-80px;background:var(--navy);opacity:.06"></div>
+<div class="slide" data-slide="5" data-criteria="Data Science · Разработка и инженерия">
+  <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>05 / 12 · Специфика данных</span></div>
   <div class="content">
-    <h2 class="section-title reveal">1000 расчётов: две геометрии, пять режимов</h2>
+    <h2 class="section-title reveal">Специфика данных</h2>
     <div class="rule reveal"></div>
     <div class="grid2">
-      <div class="panel t-teal reveal" style="padding:.72rem;">
-        <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:.5rem;">
-          <div><div class="kicker">Геометрия 1</div><div style="font-weight:800;color:var(--ink);margin-top:.22rem;">Пластина с отверстием</div></div>
-          <div class="metric" style="font-size:1.35rem;">160</div>
-        </div>
-        <div style="display:grid;grid-template-columns:.82fr 1.18fr;gap:.5rem;">
-          <img src="figs/kirsch_scheme.png" alt="Схема пластины с отверстием" style="display:block;width:100%;height:190px;object-fit:contain;border-radius:5px;background:#fff;">
-          <img src="figs/kirsch_stress.png" alt="Поле напряжений пластины с отверстием" style="display:block;width:100%;height:190px;object-fit:contain;border-radius:5px;background:#fff;">
-        </div>
-        <div class="note" style="margin-top:.45rem;">Гладкий отклик: максимальное эквивалентное напряжение.</div>
+      <div class="panel t-teal reveal" style="padding:.85rem;">
+        <table class="t compact">
+          <thead><tr><th>Особенность</th><th>Как решено</th></tr></thead>
+          <tbody>
+            <tr><td>Одна точка - полный ANSYS-расчёт</td><td>LHS отбирает 1000 сочетаний без полного перебора</td></tr>
+            <tr><td>Пять разных режимов</td><td>5 отдельных датасетов: 160 / 320 / 120 / 200 / 200 точек</td></tr>
+            <tr><td>Всего 100-320 строк на задачу</td><td>5 фолдов × 3 seed = 15 оценок качества</td></tr>
+            <tr><td>Порог и пик похожи на выбросы</td><td>0 критических точек удалено из пластичности и резонанса</td></tr>
+            <tr><td>Признаки разных масштабов</td><td>StandardScaler внутри Pipeline, обучение только на train-fold</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="panel t-brick reveal" style="padding:.72rem;">
-        <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:.5rem;">
-          <div><div class="kicker">Геометрия 2</div><div style="font-weight:800;color:var(--ink);margin-top:.22rem;">Консольно закреплённый элемент</div></div>
-          <div class="metric" style="font-size:1.35rem;color:var(--brick);">840</div>
-        </div>
-        <img src="figs/cantilever_scheme.png" alt="Схема консольно закреплённого элемента" style="display:block;width:100%;height:82px;object-fit:contain;border-radius:5px;background:#fff;">
-        <img src="figs/cantilever_stress.png" alt="Поле напряжений консольно закреплённого элемента" style="display:block;width:100%;height:108px;object-fit:contain;border-radius:5px;background:#fff;margin-top:.45rem;">
-        <div class="note" style="margin-top:.42rem;">Четыре режима: упругий, расширенный, пластический и гармонический.</div>
+      <div class="panel t-navy reveal" style="padding:1rem;display:grid;grid-template-columns:repeat(2,1fr);align-content:center;gap:1rem;">
+        <div><div class="metric" style="font-size:2.25rem;">1000</div><div class="note">собственных расчётов ANSYS</div></div>
+        <div><div class="metric" style="font-size:2.25rem;">100-320</div><div class="note">точек в одной постановке</div></div>
+        <div><div class="metric" style="font-size:2.25rem;">15</div><div class="note">валидационных оценок на модель и задачу</div></div>
+        <div><div class="metric" style="font-size:2.25rem;">0</div><div class="note">критических точек удалено как выбросы</div></div>
+        <div class="panel" style="grid-column:1 / 3;padding:.65rem;border-left:3px solid var(--brick);font-size:.8rem;line-height:1.45;">Порог текучести и резонансный пик - не мусор в данных, а главный сигнал для сравнения моделей.</div>
       </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.42rem;margin-top:.65rem;">
-      <div class="panel" style="padding:.48rem;text-align:center;"><b>Кирш</b><div class="note">160</div></div>
-      <div class="panel" style="padding:.48rem;text-align:center;"><b>Упругий изгиб</b><div class="note">320</div></div>
-      <div class="panel" style="padding:.48rem;text-align:center;"><b>Широкий диапазон</b><div class="note">120</div></div>
-      <div class="panel" style="padding:.48rem;text-align:center;"><b>Пластичность</b><div class="note">200</div></div>
-      <div class="panel" style="padding:.48rem;text-align:center;"><b>Резонанс</b><div class="note">200</div></div>
     </div>
   </div>
 </div>
-
 <!-- 6 -->
 <div class="slide" data-slide="6">
   <div class="shead"><span><b>Суррогаты для МКЭ</b></span><span>06 / 12 · Методика сравнения</span></div>
